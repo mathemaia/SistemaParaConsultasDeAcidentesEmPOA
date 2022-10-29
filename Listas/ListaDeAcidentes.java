@@ -1,8 +1,5 @@
 package Listas;
 
-import java.util.Arrays;
-import java.util.Objects;
-
 /**
  * Classe que implementa uma lista encadeada (alocação dinâmica).
  * @author Matheus Maia
@@ -14,21 +11,85 @@ public class ListaDeAcidentes {
      * Classe interna Nodo. Contém um elemento e uma referência para o próximo.
      */
     private static class Acidente {
-        public String[] infos;
-        public Acidente proximo;
+        // Referência para o próximo nodo.
+        private Acidente proximo;
+        // Dados do acidente.
+        private String data;
+        private String hora;
+        private int idade;
+        private String sexo;
+        private String sitVitima;
+        private String log1;
+        private String tipoAcid;
+        private int auto;
+        private int taxi;
+        private int onibusUrb;
+        private int onibusMet;
+        private int onibusInt;
+        private int caminhao;
+        private int moto;
+        private int carroca;
+        private int bicicleta;
+        private int outro;
+        private int lotacao;
+        private String diaSem;
+        private String periodoDia;
+        private String fxEt;
+        private String tipoVeic;
 
         /**
          * Construtor.
-         * @param infos infos a ser inicializado com o nodo.
-         * @param proximo referência ao próximo infos da cadeia.
+         * @param proximo Nodo seguinte.
+         * @param data Data em que ocorreu o acidente.
+         * @param hora Hora em que ocorreu o acidente.
+         * @param idade Idade da vítima.
+         * @param sexo Sexo da vítima.
+         * @param sitVitima Informação da condição da vitima.
+         * @param log1 Nomo do logradouro onde ocorreu o acidente.
+         * @param tipoAcid Informação descritiva do tipo de acidente.
+         * @param auto Número de veículos do típo automóvel envolvidos.
+         * @param taxi Número de táxis envolvidos no acidente.
+         * @param onibusUrb Número de ônibus urbanos envolvidos no acidente.
+         * @param onibusMet Número de ônibus metropolitanos envolvidos no acidente.
+         * @param onibusInt Número de ônibus interurbanos envolvidos no acidente.
+         * @param caminhao Número de veículos do tipo caminhão envolvidos no acidente.
+         * @param moto Número de motocicletas envolvidas no acidente.
+         * @param carroca Número de carroças envolvidas no acidente.
+         * @param bicicleta Número de bicicletas envolvidas no acidente.
+         * @param outro Número de outros veículos envolvidos no acidente
+         * @param lotacao Número de veículos do tipo lotações envolvidas no acidente.
+         * @param diaSem Dia da semana em que ocorreu o acidente.
+         * @param periodoDia Período do dia em que ocorreu o acidente.
+         * @param fxEt Faixa etária da vítima.
+         * @param tipoVeic Informação descritiva do tipo de veículo onde encontrava-se a vítima naquele acidente.
          */
-        public Acidente(String[] infos, Acidente proximo) {
-            this.infos = infos;
+        public Acidente(Acidente proximo, String data, String hora, int idade, String sexo, String sitVitima,
+                        String log1, String tipoAcid, int auto, int taxi, int onibusUrb, int onibusMet, int onibusInt,
+                        int caminhao, int moto, int carroca, int bicicleta, int outro, int lotacao, String diaSem,
+                        String periodoDia, String fxEt, String tipoVeic) {
             this.proximo = proximo;
-        }
-        public Acidente(String[] infos) {
-            this.infos = infos;
-            this.proximo = null;
+            this.data = data;
+            this.hora = hora;
+            this.idade = idade;
+            this.sexo = sexo;
+            this.sitVitima = sitVitima;
+            this.log1 = log1;
+            this.tipoAcid = tipoAcid;
+            this.auto = auto;
+            this.taxi = taxi;
+            this.onibusUrb = onibusUrb;
+            this.onibusMet = onibusMet;
+            this.onibusInt = onibusInt;
+            this.caminhao = caminhao;
+            this.moto = moto;
+            this.carroca = carroca;
+            this.bicicleta = bicicleta;
+            this.outro = outro;
+            this.lotacao = lotacao;
+            this.diaSem = diaSem;
+            this.periodoDia = periodoDia;
+            this.fxEt = fxEt;
+            this.tipoVeic = tipoVeic;
         }
     }
 
@@ -74,13 +135,37 @@ public class ListaDeAcidentes {
     }
 
     /**
-     * Adiciona um infos no final da lista.
-     * @param infos infos a ser adicionado.
-     * @param indice posição que o infos será inserido.
-     * @throws IndexOutOfBoundsException se o índice passado for inválido.
+     * Adiciona elementos na posição passada como parâmentro.
+     * @param indice Posição que o nodo Acidente será inserido na lista.
+     * @param data Data em que ocorreu o acidente.
+     * @param hora Hora em que ocorreu o acidente.
+     * @param idade Idade da vítima.
+     * @param sexo Sexo da vítima.
+     * @param sitVitima Informação da condição da vitima.
+     * @param log1 Nomo do logradouro onde ocorreu o acidente.
+     * @param tipoAcid Informação descritiva do tipo de acidente.
+     * @param auto Número de veículos do típo automóvel envolvidos.
+     * @param taxi Número de táxis envolvidos no acidente.
+     * @param onibusUrb Número de ônibus urbanos envolvidos no acidente.
+     * @param onibusMet Número de ônibus metropolitanos envolvidos no acidente.
+     * @param onibusInt Número de ônibus interurbanos envolvidos no acidente.
+     * @param caminhao Número de veículos do tipo caminhão envolvidos no acidente.
+     * @param moto Número de motocicletas envolvidas no acidente.
+     * @param carroca Número de carroças envolvidas no acidente.
+     * @param bicicleta Número de bicicletas envolvidas no acidente.
+     * @param outro Número de outros veículos envolvidos no acidente
+     * @param lotacao Número de veículos do tipo lotações envolvidas no acidente.
+     * @param diaSem Dia da semana em que ocorreu o acidente.
+     * @param periodoDia Período do dia em que ocorreu o acidente.
+     * @param fxEt Faixa etária da vítima.
+     * @param tipoVeic Informação descritiva do tipo de veículo onde encontrava-se a vítima naquele acidente.
      */
-    public void add(int indice, String[] infos) {
-        Acidente aux = new Acidente(infos);
+    public void add(int indice, String data, String hora, int idade, String sexo, String sitVitima,
+                    String log1, String tipoAcid, int auto, int taxi, int onibusUrb, int onibusMet, int onibusInt,
+                    int caminhao, int moto, int carroca, int bicicleta, int outro, int lotacao, String diaSem,
+                    String periodoDia, String fxEt, String tipoVeic) {
+        Acidente aux = new Acidente(null, data, hora, idade, sexo, sitVitima, log1, tipoAcid, auto, taxi, onibusUrb,
+                onibusMet, onibusInt, caminhao, moto, carroca, bicicleta, outro, lotacao, diaSem, periodoDia, fxEt, tipoVeic);
 
         // Lança exceção se o índice for inválido.
         if (indice < 0 || indice > this.count)
@@ -118,7 +203,7 @@ public class ListaDeAcidentes {
      * @param indice indice do elemento a ser retornado.
      * @return elemento a ser retornado.
      */
-    public String[] get(int indice) {
+    public String get(int indice) {
         // Lança uma exceção se o indice passado for inválido.
         if (indice < 0 || indice >= this.count)
             throw new IndexOutOfBoundsException("Indice invalido!");
