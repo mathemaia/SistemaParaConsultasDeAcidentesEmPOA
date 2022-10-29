@@ -136,7 +136,6 @@ public class ListaDeAcidentes {
 
     /**
      * Adiciona um Acidente na posição passada como parâmetro.
-     * @param id Número identificador do acidente.
      * @param indice Posição que o nodo Acidente será inserido na lista.
      * @param data Data em que ocorreu o acidente.
      * @param hora Hora em que ocorreu o acidente.
@@ -247,21 +246,10 @@ public class ListaDeAcidentes {
             throw new IndexOutOfBoundsException("Indice invalido!");
 
         // Identifica a coluna (tipo de dado).
-        String saida = null;
-        if (coluna.equals("id")) {
-            // Retorna o tail se o indice for o deste.
-            if (indice == this.count - 1) {
-                return Integer.toString(this.tail.id); 
-            } else {
-                // Procura pelo indice passado.
-                Acidente aux = this.head;
-                for (int i = 0; i < indice; i++) {
-                    aux = aux.next;
-                }
-                saida = Integer.toString(this.tail.id);
-            }
-        } else if (coluna.equals("data")) {
-            // Retorna o tail se o indice for o deste.
+        String saida;
+
+        if (coluna.equals("data")) {
+
             if (indice == this.count - 1) {
                 return this.tail.data;
             } else {
@@ -287,7 +275,7 @@ public class ListaDeAcidentes {
         } else if (coluna.equals("idade")) {
             // Retorna o tail se o indice for o deste.
             if (indice == this.count - 1) {
-                return Integer.toString(this.tail.idade); 
+                return Integer.toString(this.tail.idade);
             } else {
                 // Procura pelo indice passado.
                 Acidente aux = this.head;
@@ -295,7 +283,7 @@ public class ListaDeAcidentes {
                     aux = aux.next;
                 }
                 saida = Integer.toString(this.tail.idade);
-            }        
+            }
         } else if (coluna.equals("sexo")) {
             // Retorna o tail se o indice for o deste.
             if (indice == this.count - 1) {
@@ -307,7 +295,7 @@ public class ListaDeAcidentes {
                     aux = aux.next;
                 }
                 saida = aux.sexo;
-            }     
+            }
         } else if (coluna.equals("sitVitima")) {
             // Retorna o tail se o indice for o deste.
             if (indice == this.count - 1) {
@@ -319,7 +307,7 @@ public class ListaDeAcidentes {
                     aux = aux.next;
                 }
                 saida = aux.sitVitima;
-            }      
+            }
         } else if (coluna.equals("log1")) {
             // Retorna o tail se o indice for o deste.
             if (indice == this.count - 1) {
@@ -331,7 +319,7 @@ public class ListaDeAcidentes {
                     aux = aux.next;
                 }
                 saida = aux.log1;
-            }  
+            }
         } else if (coluna.equals("tipoAcid")) {
             // Retorna o tail se o indice for o deste.
             if (indice == this.count - 1) {
@@ -343,7 +331,7 @@ public class ListaDeAcidentes {
                     aux = aux.next;
                 }
                 saida = aux.tipoAcid;
-            }    
+            }
         } else if (coluna.equals("auto")) {
            // Retorna o tail se o indice for o deste.
             if (indice == this.count - 1) {
@@ -355,7 +343,7 @@ public class ListaDeAcidentes {
                     aux = aux.next;
                 }
                 saida = Integer.toString(aux.auto);
-            }  
+            }
         } else if (coluna.equals("taxi")) {
             // Retorna o tail se o indice for o deste.
             if (indice == this.count - 1) {
@@ -403,7 +391,7 @@ public class ListaDeAcidentes {
                     aux = aux.next;
                 }
                 saida = Integer.toString(aux.onibusInt);
-            }    
+            }
         } else if (coluna.equals("caminhao")) {
             // Retorna o tail se o indice for o deste.
             if (indice == this.count - 1) {
@@ -524,6 +512,20 @@ public class ListaDeAcidentes {
                 }
                 saida = aux.tipoVeic;
             }
+        } else if (coluna.equals("id")){
+            // Retorna o tail se o indice for o deste.
+            if (indice == this.count - 1) {
+                return Integer.toString(this.tail.id);
+            } else {
+                // Procura pelo indice passado.
+                Acidente aux = this.head;
+                for (int i = 0; i < indice; i++) {
+                    aux = aux.next;
+                }
+                saida = Integer.toString(aux.id);
+            }
+        } else {
+            throw new NullPointerException("Coluna inválida!");
         }
 
         return saida;
@@ -588,23 +590,22 @@ public class ListaDeAcidentes {
         ant.next = aux.next;
         this.count--;
     }
-    
+
     /**
      * Prucura por um Acidente (nodo) a partir do seu id.
-     * @param id
-     * @return
+     * @param id identificação do acidente.
      */
-    public int indexOf(int id) {
+    public int indexOfId(int id) {
         Acidente aux = this.head;
-        int indice = 0;
 
         // Procura pelo elemento a partir do id.
-        while (aux.id != id) {
+        for (int i = 0; i < this.count; i++) {
+            if (aux.id == id) {
+                return i;
+            }
             aux = aux.next;
-            indice++;
         }
 
-        return indice;
+        return -1;
     }
-
 }
