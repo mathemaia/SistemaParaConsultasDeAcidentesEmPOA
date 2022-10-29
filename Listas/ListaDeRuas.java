@@ -12,21 +12,21 @@ public class ListaDeRuas {
     // Contador de elementos.
     private int count;
     // Sentinelas.
-    private final Rua headStreet;
-    private final Rua tailStreet;
+    private final Rua head;
+    private final Rua tail;
 
     /**
      * Classe interna Nodo. Contém um elemento, uma referência para o Nodo anterior outra para o próximo
      */
     private static class Rua {
-        private Integer rua;
-        private Rua nextStreet;
-        private Rua prevStreet;
+        private ListaDeAcidentes acidentes;
+        private Rua next;
+        private Rua prev;
 
-        public Rua(Integer elemento) {
-            this.rua = elemento;
-            this.nextStreet = null;
-            this.prevStreet = null;
+        public Rua(ListaDeAcidentes acidentes) {
+            this.acidentes = acidentes;
+            this.next = null;
+            this.prev = null;
         }
     }
 
@@ -34,51 +34,51 @@ public class ListaDeRuas {
      * Construtor.
      */
     public ListaDeRuas() {
-        this.headStreet = new Rua(null);
-        this.tailStreet = new Rua(null);
-        this.headStreet.nextStreet = this.tailStreet;
-        this.tailStreet.prevStreet = this.headStreet;
+        this.head = new Rua(null);
+        this.tail = new Rua(null);
+        this.head.next = this.tail;
+        this.tail.prev = this.head;
         this.count = 0;
     }
 
     /**
      * Adiciona um elemento à última posição da lista.
-     * @param elemento elemento a ser inserido.
+     * @param acidentes elemento a ser inserido.
      */
-    public void add(Integer elemento) {
-        Rua aux = new Rua(elemento);
+    public void add(ListaDeAcidentes acidentes) {
+        Rua aux = new Rua(acidentes);
 
         // Conecta o nodo na última posição da lista.
-        aux.nextStreet = this.tailStreet;
-        aux.prevStreet = this.tailStreet.prevStreet;
-        this.tailStreet.prevStreet.nextStreet = aux;
-        this.tailStreet.prevStreet = aux;
+        aux.next = this.tail;
+        aux.prev = this.tail.prev;
+        this.tail.prev.next = aux;
+        this.tail.prev = aux;
 
         this.count++;
     }
 
     /**
-     * Adiciona um elemento por indice.
-     * @param elemento elemento a ser inserido na lista.
+     * Adiciona um elemento (ListaDeAcidentes) por indice.
+     * @param acidentes elemento a ser inserido na lista.
      * @param indice indice do elemento a ser inserido.
      */
-    public void set(int indice, Integer elemento) {
+    public void set(int indice, ListaDeAcidentes acidentes) {
         // Lança uma exceção se o indice passado for inválido.
         if ((indice > this.count) || (indice < 0))
             throw new IndexOutOfBoundsException("Indice inválido!");
 
         // Se o índice for igual ao tamanho atual da lista, adiciona no fim.
-        if (this.count == indice) add(elemento);
+        if (this.count == indice) add(acidentes);
 
         // Percorre a lista até o índice passado.
-        Rua aux = new Rua(elemento);
-        Rua ptr = getNode(indice);
+        Rua aux = new Rua(acidentes);
+        Rua ptr = getRua(indice);
 
         // Linka o novo Nodo como o próximo do Nodo de índice passado.
-        ptr.prevStreet.nextStreet = aux;
-        aux.prevStreet = ptr.prevStreet;
-        ptr.prevStreet = aux;
-        aux.nextStreet = ptr;
+        ptr.prev.next = aux;
+        aux.prev = ptr.prev;
+        ptr.prev = aux;
+        aux.next = ptr;
 
         this.count++;
     }
@@ -89,7 +89,7 @@ public class ListaDeRuas {
      * @param indice índice do nodo.
      * @return Nodo.
      */
-    public Rua getNode(int indice) {
+    public Rua getRua(int indice) {
         // Lança um erro caso o parâmetro passado seja negativo ou maior/igual ao número de elementos.
         if ((indice < 0) || (indice >= count))
             throw new IndexOutOfBoundsException();
@@ -97,14 +97,14 @@ public class ListaDeRuas {
         // Percorre a lista até o índice passado como parâmentro.
         Rua aux;
         if (indice <= (this.count / 2)) {
-            aux = this.headStreet.nextStreet;
+            aux = this.head.next;
             for (int i = 0; i < indice; i++) {
-                aux = aux.nextStreet;
+                aux = aux.next;
             }
         } else {
-            aux = this.tailStreet.prevStreet;
+            aux = this.tail.prev;
             for (int i = count - 1; i > indice; i--) {
-                aux = aux.prevStreet;
+                aux = aux.prev;
             }
         }
 
@@ -121,7 +121,7 @@ public class ListaDeRuas {
         if ((indice < 0) || (indice >= this.count))
             throw new IndexOutOfBoundsException("Indice invalido!");
 
-        return getNode(indice).rua;
+        return getRua(indice).acidentes;
     }
 
     /**
@@ -135,13 +135,13 @@ public class ListaDeRuas {
             throw new IndexOutOfBoundsException("Indice invalido!");
 
         // Se está antes da metade, começa percorrendo pelo header.
-        Rua aux = getNode(indice);
-        aux.prevStreet.nextStreet = aux.nextStreet;
-        aux.nextStreet.prevStreet = aux.prevStreet;
+        Rua aux = getRua(indice);
+        aux.prev.next = aux.next;
+        aux.next.prev = aux.prev;
 
         // Retorna o elemento.
         this.count--;
-        return aux.rua;
+        return aux.acidentes;
     }
 
     /**
@@ -166,16 +166,16 @@ public class ListaDeRuas {
      * @return true ou false.
      */
     public boolean contains(Integer elemento) {
-        Rua aux = this.headStreet.nextStreet;
+        Rua aux = this.head.next;
         boolean contem = false;
 
         // Começa a iteração no primeiro elemento e termina quando alcançar o trailer.
-        while (aux != this.tailStreet) {
-            if (Objects.equals(aux.rua, elemento)) {
+        while (aux != this.tail) {
+            if (Objects.equals(aux.acidentes, elemento)) {
                 contem = true;
                 break;
             }
-            aux = aux.nextStreet;
+            aux = aux.next;
         }
         return contem;
     }
@@ -187,12 +187,12 @@ public class ListaDeRuas {
      */
     public int indexOf(Integer elemento) {
         if (contains(elemento)) {
-            Rua aux = this.headStreet.nextStreet;
+            Rua aux = this.head.next;
             int idx = 0;
 
             // Itera a lista até encontrar o trailer.
             for (int i = 0; i < count; i++) {
-                if (Objects.equals(aux.rua, elemento)) {
+                if (Objects.equals(aux.acidentes, elemento)) {
                     idx = i;
                     break;
                 }
@@ -208,8 +208,8 @@ public class ListaDeRuas {
      * Esvazia a lista.
      */
     public void clear() {
-        this.headStreet.nextStreet = this.tailStreet;
-        this.tailStreet.prevStreet = this.headStreet;
+        this.head.next = this.tail;
+        this.tail.prev = this.head;
         this.count = 0;
     }
 
@@ -220,11 +220,11 @@ public class ListaDeRuas {
     @Override
     public String toString() {
         StringBuilder s = new StringBuilder();
-        Rua aux = headStreet.nextStreet;
+        Rua aux = head.next;
         for (int i = 0; i < this.count; i++) {
-            s.append(aux.rua.toString());
+            s.append(aux.acidentes.toString());
             s.append("\n");
-            aux = aux.nextStreet;
+            aux = aux.next;
         }
 
         return s.toString();
@@ -236,14 +236,14 @@ public class ListaDeRuas {
      * @return quantidade de vezes que o elemento aparece.
      */
     public int countOccurrences(Integer elemento) {
-        Rua aux = headStreet.nextStreet;
+        Rua aux = head.next;
         int contador = 0;
 
         for (int i = 0; i < this.count; i++) {
-            if (aux.rua.equals(elemento)) {
+            if (aux.acidentes.equals(elemento)) {
                 contador++;
             }
-            aux = aux.nextStreet;
+            aux = aux.next;
         }
 
         return contador;

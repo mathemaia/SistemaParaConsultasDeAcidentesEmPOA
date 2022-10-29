@@ -1,4 +1,4 @@
-
+package Listas;
 
 public class ListaDeAcidentes {
     /**
@@ -6,7 +6,7 @@ public class ListaDeAcidentes {
      */
     private static class Acidente {
         // Referência para o próximo nodo.
-        private Acidente proximo;
+        private Acidente next;
         // Dados do acidente.
         private String data;
         private String hora;
@@ -61,7 +61,7 @@ public class ListaDeAcidentes {
                         String log1, String tipoAcid, int auto, int taxi, int onibusUrb, int onibusMet, int onibusInt,
                         int caminhao, int moto, int carroca, int bicicleta, int outro, int lotacao, String diaSem,
                         String periodoDia, String fxEt, String tipoVeic) {
-            this.proximo = proximo;
+            this.next = proximo;
             this.data = data;
             this.hora = hora;
             this.idade = idade;
@@ -93,11 +93,14 @@ public class ListaDeAcidentes {
     private Acidente tail;
     // Contador de elementos.
     private int count;
+    // Nome da rua - usada como identificador das listas de ruas.
+    private String rua;
 
     /**
      * Construtor.
      */
-    public ListaDeAcidentes() {
+    public ListaDeAcidentes(String rua) {
+        this.rua = rua;
         this.head = null;
         this.tail = null;
         this.count = 0;
@@ -123,20 +126,20 @@ public class ListaDeAcidentes {
      * Esvazia a lista e retorna aos seus valores padrão.
      */
     public void clear() {
+        this.rua = null;
         this.head = null;
         this.tail = null;
         this.count = 0;
     }
 
     /**
-     * Adiciona elementos na posição passada como parâmentro.
+     * Adiciona um Acidente na posição passada como parâmetro.
      * @param indice Posição que o nodo Acidente será inserido na lista.
      * @param data Data em que ocorreu o acidente.
      * @param hora Hora em que ocorreu o acidente.
      * @param idade Idade da vítima.
      * @param sexo Sexo da vítima.
      * @param sitVitima Informação da condição da vitima.
-     * @param log1 Nomo do logradouro onde ocorreu o acidente.
      * @param tipoAcid Informação descritiva do tipo de acidente.
      * @param auto Número de veículos do típo automóvel envolvidos.
      * @param taxi Número de táxis envolvidos no acidente.
@@ -154,11 +157,10 @@ public class ListaDeAcidentes {
      * @param fxEt Faixa etária da vítima.
      * @param tipoVeic Informação descritiva do tipo de veículo onde encontrava-se a vítima naquele acidente.
      */
-    public void add(Integer indice, String data, String hora, int idade, String sexo, String sitVitima,
-                    String log1, String tipoAcid, int auto, int taxi, int onibusUrb, int onibusMet, int onibusInt,
-                    int caminhao, int moto, int carroca, int bicicleta, int outro, int lotacao, String diaSem,
-                    String periodoDia, String fxEt, String tipoVeic) {
-        Acidente aux = new Acidente(null, data, hora, idade, sexo, sitVitima, log1, tipoAcid, auto, taxi, onibusUrb,
+    public void addAcidenteIdx(Integer indice, String data, String hora, int idade, String sexo, String sitVitima, String tipoAcid, int auto, int taxi, int onibusUrb, int onibusMet, int onibusInt,
+                               int caminhao, int moto, int carroca, int bicicleta, int outro, int lotacao, String diaSem,
+                               String periodoDia, String fxEt, String tipoVeic) {
+        Acidente inserir = new Acidente(null, data, hora, idade, sexo, sitVitima, this.rua, tipoAcid, auto, taxi, onibusUrb,
                 onibusMet, onibusInt, caminhao, moto, carroca, bicicleta, outro, lotacao, diaSem, periodoDia, fxEt, tipoVeic);
 
         // Lança exceção se o índice for inválido.
@@ -169,35 +171,74 @@ public class ListaDeAcidentes {
         if (indice == 0) {
             // ...e a lista estiver vazia:
             if (this.head == null) {
-                this.tail = aux;
+                this.tail = inserir;
             // ...e a lista não estiver vazia:
             } else {
-                aux.proximo = head;
+                inserir.next = head;
             }
-            this.head = aux;
+            this.head = inserir;
         // Se o índice for a última posição:
         } else if (indice == this.count) {
-            this.tail.proximo = aux;
-            this.tail = aux;
+            this.tail.next = inserir;
+            this.tail = inserir;
         // Se o índice estiver no meio da lista.
         } else {
-            Acidente ant = head;
-            for (int i = 0; i < indice; i++) {
-                ant = ant.proximo;
+            Acidente ant = this.head;
+            for (int i = 0; i < indice - 1; i++) {
+                ant = ant.next;
             }
-            aux.proximo = ant.proximo;
-            ant.proximo = aux;
+            inserir.next = ant.next;
+            ant.next = inserir;
         }
 
         this.count++;
     }
 
     /**
-     * Retorna o elemento passado como parâmetro do nodo escolhido.
+     * Adiciona um Acidente (nodo) no fim da lista de acidentes.
+     * @param data Data em que ocorreu o acidente.
+     * @param hora Hora em que ocorreu o acidente.
+     * @param idade Idade da vítima.
+     * @param sexo Sexo da vítima.
+     * @param sitVitima Informação da condição da vitima.
+     * @param tipoAcid Informação descritiva do tipo de acidente.
+     * @param auto Número de veículos do típo automóvel envolvidos.
+     * @param taxi Número de táxis envolvidos no acidente.
+     * @param onibusUrb Número de ônibus urbanos envolvidos no acidente.
+     * @param onibusMet Número de ônibus metropolitanos envolvidos no acidente.
+     * @param onibusInt Número de ônibus interurbanos envolvidos no acidente.
+     * @param caminhao Número de veículos do tipo caminhão envolvidos no acidente.
+     * @param moto Número de motocicletas envolvidas no acidente.
+     * @param carroca Número de carroças envolvidas no acidente.
+     * @param bicicleta Número de bicicletas envolvidas no acidente.
+     * @param outro Número de outros veículos envolvidos no acidente
+     * @param lotacao Número de veículos do tipo lotações envolvidas no acidente.
+     * @param diaSem Dia da semana em que ocorreu o acidente.
+     * @param periodoDia Período do dia em que ocorreu o acidente.
+     * @param fxEt Faixa etária da vítima.
+     * @param tipoVeic Informação descritiva do tipo de veículo onde encontrava-se a vítima naquele acidente.
+     */
+    public void addAcidente(String data, String hora, int idade, String sexo, String sitVitima, String tipoAcid, int auto, int taxi, int onibusUrb, int onibusMet, int onibusInt,
+                            int caminhao, int moto, int carroca, int bicicleta, int outro, int lotacao, String diaSem,
+                            String periodoDia, String fxEt, String tipoVeic) {
+        Acidente aux = new Acidente(null, data, hora, idade, sexo, sitVitima, this.rua, tipoAcid, auto, taxi, onibusUrb,
+                onibusMet, onibusInt, caminhao, moto, carroca, bicicleta, outro, lotacao, diaSem, periodoDia, fxEt, tipoVeic);
+
+        if (this.head == null) {
+            this.head = aux;
+        } else {
+            this.tail.next = aux;
+        }
+        this.tail = aux;
+        this.count++;
+    }
+
+    /**
+     * Retorna um dado (log,hora,tct...) de um Acidente (nodo) de índice escolhido.
      * @param indice indice do nodo (Acidente).
      * @return elemento a ser retornado.
      */
-    public String get(int indice, String coluna) {
+    public String getInfo(int indice, String coluna) {
         // Lança uma exceção se o indice passado for inválido.
         if (indice < 0 || indice >= this.count)
             throw new IndexOutOfBoundsException("Indice invalido!");
@@ -212,7 +253,7 @@ public class ListaDeAcidentes {
                 // Procura pelo indice passado.
                 Acidente aux = this.head;
                 for (int i = 0; i < indice; i++) {
-                    aux = aux.proximo;
+                    aux = aux.next;
                 }
                 saida = aux.data;
             }
@@ -224,7 +265,7 @@ public class ListaDeAcidentes {
                 // Procura pelo indice passado.
                 Acidente aux = this.head;
                 for (int i = 0; i < indice; i++) {
-                    aux = aux.proximo;
+                    aux = aux.next;
                 }
                 saida = aux.hora;
             }
@@ -236,7 +277,7 @@ public class ListaDeAcidentes {
                 // Procura pelo indice passado.
                 Acidente aux = this.head;
                 for (int i = 0; i < indice; i++) {
-                    aux = aux.proximo;
+                    aux = aux.next;
                 }
                 saida = Integer.toString(this.tail.idade);
             }        
@@ -248,7 +289,7 @@ public class ListaDeAcidentes {
                 // Procura pelo indice passado.
                 Acidente aux = this.head;
                 for (int i = 0; i < indice; i++) {
-                    aux = aux.proximo;
+                    aux = aux.next;
                 }
                 saida = aux.sexo;
             }     
@@ -260,7 +301,7 @@ public class ListaDeAcidentes {
                 // Procura pelo indice passado.
                 Acidente aux = this.head;
                 for (int i = 0; i < indice; i++) {
-                    aux = aux.proximo;
+                    aux = aux.next;
                 }
                 saida = aux.sitVitima;
             }      
@@ -272,7 +313,7 @@ public class ListaDeAcidentes {
                 // Procura pelo indice passado.
                 Acidente aux = this.head;
                 for (int i = 0; i < indice; i++) {
-                    aux = aux.proximo;
+                    aux = aux.next;
                 }
                 saida = aux.log1;
             }  
@@ -284,7 +325,7 @@ public class ListaDeAcidentes {
                 // Procura pelo indice passado.
                 Acidente aux = this.head;
                 for (int i = 0; i < indice; i++) {
-                    aux = aux.proximo;
+                    aux = aux.next;
                 }
                 saida = aux.tipoAcid;
             }    
@@ -296,7 +337,7 @@ public class ListaDeAcidentes {
                 // Procura pelo indice passado.
                 Acidente aux = this.head;
                 for (int i = 0; i < indice; i++) {
-                    aux = aux.proximo;
+                    aux = aux.next;
                 }
                 saida = Integer.toString(aux.auto);
             }  
@@ -308,7 +349,7 @@ public class ListaDeAcidentes {
                 // Procura pelo indice passado.
                 Acidente aux = this.head;
                 for (int i = 0; i < indice; i++) {
-                    aux = aux.proximo;
+                    aux = aux.next;
                 }
                 saida = Integer.toString(aux.taxi);
             }
@@ -320,7 +361,7 @@ public class ListaDeAcidentes {
                 // Procura pelo indice passado.
                 Acidente aux = this.head;
                 for (int i = 0; i < indice; i++) {
-                    aux = aux.proximo;
+                    aux = aux.next;
                 }
                 saida = Integer.toString(aux.onibusUrb);
             }
@@ -332,7 +373,7 @@ public class ListaDeAcidentes {
                 // Procura pelo indice passado.
                 Acidente aux = this.head;
                 for (int i = 0; i < indice; i++) {
-                    aux = aux.proximo;
+                    aux = aux.next;
                 }
                 saida = Integer.toString(aux.onibusMet);
             }
@@ -344,7 +385,7 @@ public class ListaDeAcidentes {
                 // Procura pelo indice passado.
                 Acidente aux = this.head;
                 for (int i = 0; i < indice; i++) {
-                    aux = aux.proximo;
+                    aux = aux.next;
                 }
                 saida = Integer.toString(aux.onibusInt);
             }    
@@ -356,7 +397,7 @@ public class ListaDeAcidentes {
                 // Procura pelo indice passado.
                 Acidente aux = this.head;
                 for (int i = 0; i < indice; i++) {
-                    aux = aux.proximo;
+                    aux = aux.next;
                 }
                 saida = Integer.toString(aux.caminhao);
             }
@@ -368,7 +409,7 @@ public class ListaDeAcidentes {
                 // Procura pelo indice passado.
                 Acidente aux = this.head;
                 for (int i = 0; i < indice; i++) {
-                    aux = aux.proximo;
+                    aux = aux.next;
                 }
                 saida = Integer.toString(aux.moto);
             }
@@ -380,7 +421,7 @@ public class ListaDeAcidentes {
                 // Procura pelo indice passado.
                 Acidente aux = this.head;
                 for (int i = 0; i < indice; i++) {
-                    aux = aux.proximo;
+                    aux = aux.next;
                 }
                 saida = Integer.toString(aux.carroca);
             }
@@ -392,7 +433,7 @@ public class ListaDeAcidentes {
                 // Procura pelo indice passado.
                 Acidente aux = this.head;
                 for (int i = 0; i < indice; i++) {
-                    aux = aux.proximo;
+                    aux = aux.next;
                 }
                 saida = Integer.toString(aux.bicicleta);
             }
@@ -404,7 +445,7 @@ public class ListaDeAcidentes {
                 // Procura pelo indice passado.
                 Acidente aux = this.head;
                 for (int i = 0; i < indice; i++) {
-                    aux = aux.proximo;
+                    aux = aux.next;
                 }
                 saida = Integer.toString(aux.outro);
             }
@@ -416,7 +457,7 @@ public class ListaDeAcidentes {
                 // Procura pelo indice passado.
                 Acidente aux = this.head;
                 for (int i = 0; i < indice; i++) {
-                    aux = aux.proximo;
+                    aux = aux.next;
                 }
                 saida = Integer.toString(aux.lotacao);
             }
@@ -428,7 +469,7 @@ public class ListaDeAcidentes {
                 // Procura pelo indice passado.
                 Acidente aux = this.head;
                 for (int i = 0; i < indice; i++) {
-                    aux = aux.proximo;
+                    aux = aux.next;
                 }
                 saida = aux.diaSem;
             }
@@ -440,7 +481,7 @@ public class ListaDeAcidentes {
                 // Procura pelo indice passado.
                 Acidente aux = this.head;
                 for (int i = 0; i < indice; i++) {
-                    aux = aux.proximo;
+                    aux = aux.next;
                 }
                 saida = aux.periodoDia;
             }
@@ -452,7 +493,7 @@ public class ListaDeAcidentes {
                 // Procura pelo indice passado.
                 Acidente aux = this.head;
                 for (int i = 0; i < indice; i++) {
-                    aux = aux.proximo;
+                    aux = aux.next;
                 }
                 saida = aux.fxEt;
             }
@@ -464,12 +505,74 @@ public class ListaDeAcidentes {
                 // Procura pelo indice passado.
                 Acidente aux = this.head;
                 for (int i = 0; i < indice; i++) {
-                    aux = aux.proximo;
+                    aux = aux.next;
                 }
                 saida = aux.tipoVeic;
             }
         }
 
         return saida;
+
+
+    }
+
+    /**
+     * Retorna Acidente (nodo) de posição indice.
+     * @param indice posição do acidente na lista de cidentes.
+     * @return Acidente (nodo).
+     */
+    public Acidente getAcidente(int indice) {
+        // Lança um erro caso o parâmetro passado seja negativo ou maior/igual ao número de elementos.
+        if ((indice < 0) || (indice >= count))
+            throw new IndexOutOfBoundsException();
+
+        // Percorre a lista até o índice passado como parâmentro.
+        Acidente aux = this.head;
+        for (int i = 0; i < indice; i++) {
+            aux = aux.next;
+        }
+
+        return aux;
+    }
+
+    /**
+     * Remove da lista o Acidente (nodo) de posição indice.
+     */
+    public void remove(int indice) {
+        // Se a lista estiver vazia:
+        if (this.count == 0)
+            throw new ListaVaziaErro("A lista de acidentes está vazia!");
+
+        Acidente aux = this.head.next;
+        Acidente ant = this.head;
+
+        // Se o Acidente (nodo) a ser removido for o primeiro da lista (head).
+        if (indice == 0) {
+            this.head = head.next;
+            // Se a lista conter apenas um elemento.
+            if (this.count == 1) {
+                this.tail = null;
+            }
+        // Se o Acidente (nodo) for o último da lista (tail).
+        } else if (indice == this.count) {
+            for (int i = 0; i != this.count; i++) {
+                ant = ant.next;
+                aux = aux.next;
+            }
+            this.tail = ant;
+            this.tail.next = null;
+        // Se estiver no meio da lista.
+        } else {
+            // Percorre a lista até encontrar a posição do elemento para removê-lo.
+            for (int i = 0; i != indice - 1; i++) {
+                aux = aux.next;
+                assert ant != null;
+                ant = ant.next;
+            }
+        }
+
+        assert ant != null;
+        ant.next = aux.next;
+        this.count--;
     }
 }
