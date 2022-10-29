@@ -1,10 +1,4 @@
-package Listas;
 
-/**
- * Classe que implementa uma lista encadeada (alocação dinâmica).
- * @author Matheus Maia
- * @version 02-10-2022
- */
 
 public class ListaDeAcidentes {
     /**
@@ -160,7 +154,7 @@ public class ListaDeAcidentes {
      * @param fxEt Faixa etária da vítima.
      * @param tipoVeic Informação descritiva do tipo de veículo onde encontrava-se a vítima naquele acidente.
      */
-    public void add(int indice, String data, String hora, int idade, String sexo, String sitVitima,
+    public void add(Integer indice, String data, String hora, int idade, String sexo, String sitVitima,
                     String log1, String tipoAcid, int auto, int taxi, int onibusUrb, int onibusMet, int onibusInt,
                     int caminhao, int moto, int carroca, int bicicleta, int outro, int lotacao, String diaSem,
                     String periodoDia, String fxEt, String tipoVeic) {
@@ -199,205 +193,283 @@ public class ListaDeAcidentes {
     }
 
     /**
-     * Retorna o elemento de indice passado como argumento.
-     * @param indice indice do elemento a ser retornado.
+     * Retorna o elemento passado como parâmetro do nodo escolhido.
+     * @param indice indice do nodo (Acidente).
      * @return elemento a ser retornado.
      */
-    public String get(int indice) {
+    public String get(int indice, String coluna) {
         // Lança uma exceção se o indice passado for inválido.
         if (indice < 0 || indice >= this.count)
             throw new IndexOutOfBoundsException("Indice invalido!");
 
-        // Retorna o tail se o indice for o deste.
-        if (indice == this.count - 1)
-            return this.tail.infos;
-
-        // Procura pelo indice passado.
-        Acidente aux = this.head;
-        for (int i = 0; i < indice; i++) {
-            aux = aux.proximo;
-        }
-
-        return aux.infos;
-    }
-
-    /**
-     * Remove a primeira aparição do elemento na lista.
-     * @param infos elemento a ser removido.
-     */
-    public void remove(String[] infos) {
-        // Se a lista estiver vazia:
-        if (this.count == 0)
-            throw new ListaVaziaErro("Lista vazia!");
-
-
-        // Se o elemento for o primeiro da lista:
-        if (Arrays.equals(this.head.infos, infos)) {
-            this.head = this.head.proximo;
-            // Se a lista conter apenas um elemento:
-            if (this.count == 1) this.tail = null;
-            this.count--;
-        }
-
-        // Percorre a lista até encontrar o elemento.
-        Acidente aux = this.head.proximo;
-        Acidente ant = this.head;
-        while (aux != null) {
-            // Se o elemento a ser removido foi encontrado...
-            if (Arrays.equals(aux.infos, infos)) {
-                // ...e o elemento for o último.
-                if (aux == this.tail) {
-                    this.tail = ant;
-                    tail.proximo = null;
-                // ...e o elemento estiver no meio da lista.
-                } else {
-                    assert ant != null;
-                    ant.proximo = aux.proximo;
+        // Identifica a coluna (tipo de dado).
+        String saida = null;
+        if (coluna.equals("data")) {
+            // Retorna o tail se o indice for o deste.
+            if (indice == this.count - 1) {
+                return this.tail.data;
+            } else {
+                // Procura pelo indice passado.
+                Acidente aux = this.head;
+                for (int i = 0; i < indice; i++) {
+                    aux = aux.proximo;
                 }
-                this.count--;
+                saida = aux.data;
             }
-
-            assert ant != null;
-            ant = ant.proximo;
-            aux = aux.proximo;
-        }
-        this.count--;
-    }
-
-    /**
-     * Remove o elemento da posição passada como parâmetro.
-     * @param indice indice do elemento a ser removido.
-     * @return elemento passado como parâmetro.
-     */
-    public String[] removeByIndex(int indice) {
-        // Lança uma exceção se o indice for inválido.
-        if (indice < 0 || indice > this.count)
-            throw new IndexOutOfBoundsException("Indice invalido!");
-
-        // Se o elemento a ser removido for o primeiro.
-        if (indice == 0) {
-            String[] infos = head.infos;
-            this.head = this.head.proximo;
-
-            // Se houver apenas 1 elemento na lista.
-            if (count == 1) {
-                this.tail = null;
+        } else if (coluna.equals("hora")) {
+            // Retorna o tail se o indice for o deste.
+            if (indice == this.count - 1) {
+                return this.tail.hora;
+            } else {
+                // Procura pelo indice passado.
+                Acidente aux = this.head;
+                for (int i = 0; i < indice; i++) {
+                    aux = aux.proximo;
+                }
+                saida = aux.hora;
             }
-            this.count--;
-            return infos;
-        }
-
-        // Se o elemento for o último ou estiver no meio da lista.
-        Acidente aux = this.head;
-        Acidente ant = null;
-        for (int i = 0; i < indice; i++) {
-            ant = aux;
-            aux = aux.proximo;
-        }
-        if (aux == this.tail) {
-            this.tail = ant;
-            this.tail.proximo = null;
-        } else {
-            ant.proximo = aux.proximo;
-        }
-
-        this.count--;
-        return aux.infos;
-    }
-
-    /**
-     * Retorna o indice da primeira aparição do elemento passado como parâmetro.
-     * @param infos elemento a ser buscado.
-     * @return indice do elemento ou -1 se ele não existir.
-     */
-    public int indexOf(String[] infos) {
-        Acidente aux = this.head;
-        int indice = 0;
-
-        // Procura pelo elemento na lista.
-        for (int i = 0; i < this.count; i++) {
-            if (Arrays.equals(aux.infos, infos)) return i;
-
-            aux = aux.proximo;
-        }
-
-        return -1;
-    }
-
-    /**
-     * Procura o infos passado como parâmetro e retorna um valor booleano.
-     * @param infos infos a ser procurado.
-     * @return true ou false.
-     */
-    public boolean contains(String[] infos) {
-        Acidente aux = this.head;
-
-        for (int i = 0; i < this.count; i++) {
-            if (Arrays.equals(aux.infos, infos)) return true;
-            aux = aux.proximo;
-        }
-
-        return false;
-    }
-
-    /**
-     * Conta o número de ocorrências do elemento passado como parâmetro.
-     * @param elemento elemento a ser contabilizado.
-     * @return quantidade de vezes que ele aparece na lista.
-     */
-    public int countOccurrences(String[] elemento) {
-        Acidente aux = this.head;
-        int count = 0;
-
-        for (int i = 0; i < this.count; i++) {
-            if (Arrays.equals(aux.infos, elemento)) count++;
-            aux = aux.proximo;
-        }
-
-        return count;
-    }
-
-    /**
-     * Retorna um vetor que contém os elementos da lista original entre os indices passados como argumento.
-     * @param from indice inicial da lista.
-     * @param to indice final da lista.
-     * @return sublista.
-     */
-    public Integer[] sublist(int from, int to) {
-        // Se o tamanho for negativo ou zero lança uma exceção.
-        if ((to <= from) || (to > this.count) || (from < 0))
-            throw new IndexOutOfBoundsException("Indice invalido.");
-
-        Acidente aux = this.head;
-        Integer[] sublista = new Integer[to - from];
-        int count = 0;
-
-        for (int i = 0; i < this.count; i++) {
-            if ((i >= from) && (i < to)) {
-                sublista[count] = aux.infos;
-                count++;
+        } else if (coluna.equals("idade")) {
+            // Retorna o tail se o indice for o deste.
+            if (indice == this.count - 1) {
+                return Integer.toString(this.tail.idade); 
+            } else {
+                // Procura pelo indice passado.
+                Acidente aux = this.head;
+                for (int i = 0; i < indice; i++) {
+                    aux = aux.proximo;
+                }
+                saida = Integer.toString(this.tail.idade);
+            }        
+        } else if (coluna.equals("sexo")) {
+            // Retorna o tail se o indice for o deste.
+            if (indice == this.count - 1) {
+                return this.tail.sexo;
+            } else {
+                // Procura pelo indice passado.
+                Acidente aux = this.head;
+                for (int i = 0; i < indice; i++) {
+                    aux = aux.proximo;
+                }
+                saida = aux.sexo;
+            }     
+        } else if (coluna.equals("sitVitima")) {
+            // Retorna o tail se o indice for o deste.
+            if (indice == this.count - 1) {
+                return this.tail.sitVitima;
+            } else {
+                // Procura pelo indice passado.
+                Acidente aux = this.head;
+                for (int i = 0; i < indice; i++) {
+                    aux = aux.proximo;
+                }
+                saida = aux.sitVitima;
+            }      
+        } else if (coluna.equals("log1")) {
+            // Retorna o tail se o indice for o deste.
+            if (indice == this.count - 1) {
+                return this.tail.log1;
+            } else {
+                // Procura pelo indice passado.
+                Acidente aux = this.head;
+                for (int i = 0; i < indice; i++) {
+                    aux = aux.proximo;
+                }
+                saida = aux.log1;
+            }  
+        } else if (coluna.equals("tipoAcid")) {
+            // Retorna o tail se o indice for o deste.
+            if (indice == this.count - 1) {
+                return this.tail.tipoAcid;
+            } else {
+                // Procura pelo indice passado.
+                Acidente aux = this.head;
+                for (int i = 0; i < indice; i++) {
+                    aux = aux.proximo;
+                }
+                saida = aux.tipoAcid;
+            }    
+        } else if (coluna.equals("auto")) {
+           // Retorna o tail se o indice for o deste.
+            if (indice == this.count - 1) {
+                saida = Integer.toString(this.tail.auto);
+            } else {
+                // Procura pelo indice passado.
+                Acidente aux = this.head;
+                for (int i = 0; i < indice; i++) {
+                    aux = aux.proximo;
+                }
+                saida = Integer.toString(aux.auto);
+            }  
+        } else if (coluna.equals("taxi")) {
+            // Retorna o tail se o indice for o deste.
+            if (indice == this.count - 1) {
+                saida = Integer.toString(this.tail.taxi);
+            } else {
+                // Procura pelo indice passado.
+                Acidente aux = this.head;
+                for (int i = 0; i < indice; i++) {
+                    aux = aux.proximo;
+                }
+                saida = Integer.toString(aux.taxi);
             }
-            aux = aux.proximo;
+        } else if (coluna.equals("onibusUrb")) {
+            // Retorna o tail se o indice for o deste.
+            if (indice == this.count - 1) {
+                saida = Integer.toString(this.tail.onibusUrb);
+            } else {
+                // Procura pelo indice passado.
+                Acidente aux = this.head;
+                for (int i = 0; i < indice; i++) {
+                    aux = aux.proximo;
+                }
+                saida = Integer.toString(aux.onibusUrb);
+            }
+        } else if (coluna.equals("onibusMet")) {
+            // Retorna o tail se o indice for o deste.
+            if (indice == this.count - 1) {
+                saida = Integer.toString(this.tail.onibusMet);
+            } else {
+                // Procura pelo indice passado.
+                Acidente aux = this.head;
+                for (int i = 0; i < indice; i++) {
+                    aux = aux.proximo;
+                }
+                saida = Integer.toString(aux.onibusMet);
+            }
+        } else if (coluna.equals("onibusInt")) {
+            // Retorna o tail se o indice for o deste.
+            if (indice == this.count - 1) {
+                saida = Integer.toString(this.tail.onibusInt);
+            } else {
+                // Procura pelo indice passado.
+                Acidente aux = this.head;
+                for (int i = 0; i < indice; i++) {
+                    aux = aux.proximo;
+                }
+                saida = Integer.toString(aux.onibusInt);
+            }    
+        } else if (coluna.equals("caminhao")) {
+            // Retorna o tail se o indice for o deste.
+            if (indice == this.count - 1) {
+                saida = Integer.toString(this.tail.caminhao);
+            } else {
+                // Procura pelo indice passado.
+                Acidente aux = this.head;
+                for (int i = 0; i < indice; i++) {
+                    aux = aux.proximo;
+                }
+                saida = Integer.toString(aux.caminhao);
+            }
+        } else if (coluna.equals("moto")) {
+            // Retorna o tail se o indice for o deste.
+            if (indice == this.count - 1) {
+                saida = Integer.toString(this.tail.moto);
+            } else {
+                // Procura pelo indice passado.
+                Acidente aux = this.head;
+                for (int i = 0; i < indice; i++) {
+                    aux = aux.proximo;
+                }
+                saida = Integer.toString(aux.moto);
+            }
+        } else if (coluna.equals("carroca")) {
+            // Retorna o tail se o indice for o deste.
+            if (indice == this.count - 1) {
+                saida = Integer.toString(this.tail.carroca);
+            } else {
+                // Procura pelo indice passado.
+                Acidente aux = this.head;
+                for (int i = 0; i < indice; i++) {
+                    aux = aux.proximo;
+                }
+                saida = Integer.toString(aux.carroca);
+            }
+        } else if (coluna.equals("bicicleta")) {
+            // Retorna o tail se o indice for o deste.
+            if (indice == this.count - 1) {
+                saida = Integer.toString(this.tail.bicicleta);
+            } else {
+                // Procura pelo indice passado.
+                Acidente aux = this.head;
+                for (int i = 0; i < indice; i++) {
+                    aux = aux.proximo;
+                }
+                saida = Integer.toString(aux.bicicleta);
+            }
+        } else if (coluna.equals("outro")) {
+            // Retorna o tail se o indice for o deste.
+            if (indice == this.count - 1) {
+                saida = Integer.toString(this.tail.outro);
+            } else {
+                // Procura pelo indice passado.
+                Acidente aux = this.head;
+                for (int i = 0; i < indice; i++) {
+                    aux = aux.proximo;
+                }
+                saida = Integer.toString(aux.outro);
+            }
+        } else if (coluna.equals("lotacao")) {
+            // Retorna o tail se o indice for o deste.
+            if (indice == this.count - 1) {
+                saida = Integer.toString(this.tail.lotacao);
+            } else {
+                // Procura pelo indice passado.
+                Acidente aux = this.head;
+                for (int i = 0; i < indice; i++) {
+                    aux = aux.proximo;
+                }
+                saida = Integer.toString(aux.lotacao);
+            }
+        } else if (coluna.equals("diaSem")) {
+            // Retorna o tail se o indice for o deste.
+            if (indice == this.count - 1) {
+                saida = this.tail.diaSem;
+            } else {
+                // Procura pelo indice passado.
+                Acidente aux = this.head;
+                for (int i = 0; i < indice; i++) {
+                    aux = aux.proximo;
+                }
+                saida = aux.diaSem;
+            }
+        } else if (coluna.equals("periodoDia")) {
+            // Retorna o tail se o indice for o deste.
+            if (indice == this.count - 1) {
+                saida = this.tail.periodoDia;
+            } else {
+                // Procura pelo indice passado.
+                Acidente aux = this.head;
+                for (int i = 0; i < indice; i++) {
+                    aux = aux.proximo;
+                }
+                saida = aux.periodoDia;
+            }
+        } else if (coluna.equals("fxEt")) {
+            // Retorna o tail se o indice for o deste.
+            if (indice == this.count - 1) {
+                saida = this.tail.fxEt;
+            } else {
+                // Procura pelo indice passado.
+                Acidente aux = this.head;
+                for (int i = 0; i < indice; i++) {
+                    aux = aux.proximo;
+                }
+                saida = aux.fxEt;
+            }
+        } else if (coluna.equals("tipoVeic")) {
+            // Retorna o tail se o indice for o deste.
+            if (indice == this.count - 1) {
+                saida = this.tail.tipoVeic;
+            } else {
+                // Procura pelo indice passado.
+                Acidente aux = this.head;
+                for (int i = 0; i < indice; i++) {
+                    aux = aux.proximo;
+                }
+                saida = aux.tipoVeic;
+            }
         }
 
-        return sublista;
-    }
-
-    /**
-     * Retorna a lista em formato string.
-     * @return lista em formato String.
-     */
-    @Override
-    public String toString() {
-        StringBuilder s = new StringBuilder();
-
-        Acidente aux = this.head;
-
-        while (aux != null) {
-            s.append(Arrays.toString(aux.infos)).append(" ");
-            aux = aux.proximo;
-        }
-
-        return s.toString();
+        return saida;
     }
 }
