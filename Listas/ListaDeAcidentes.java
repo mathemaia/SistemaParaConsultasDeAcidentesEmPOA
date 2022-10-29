@@ -8,6 +8,7 @@ public class ListaDeAcidentes {
         // Referência para o próximo nodo.
         private Acidente next;
         // Dados do acidente.
+        private int id;
         private String data;
         private String hora;
         private int idade;
@@ -57,11 +58,12 @@ public class ListaDeAcidentes {
          * @param fxEt Faixa etária da vítima.
          * @param tipoVeic Informação descritiva do tipo de veículo onde encontrava-se a vítima naquele acidente.
          */
-        public Acidente(Acidente proximo, String data, String hora, int idade, String sexo, String sitVitima,
+        public Acidente(Acidente proximo, int id, String data, String hora, int idade, String sexo, String sitVitima,
                         String log1, String tipoAcid, int auto, int taxi, int onibusUrb, int onibusMet, int onibusInt,
                         int caminhao, int moto, int carroca, int bicicleta, int outro, int lotacao, String diaSem,
                         String periodoDia, String fxEt, String tipoVeic) {
             this.next = proximo;
+            this.id = id;
             this.data = data;
             this.hora = hora;
             this.idade = idade;
@@ -134,6 +136,7 @@ public class ListaDeAcidentes {
 
     /**
      * Adiciona um Acidente na posição passada como parâmetro.
+     * @param id Número identificador do acidente.
      * @param indice Posição que o nodo Acidente será inserido na lista.
      * @param data Data em que ocorreu o acidente.
      * @param hora Hora em que ocorreu o acidente.
@@ -157,10 +160,10 @@ public class ListaDeAcidentes {
      * @param fxEt Faixa etária da vítima.
      * @param tipoVeic Informação descritiva do tipo de veículo onde encontrava-se a vítima naquele acidente.
      */
-    public void addAcidenteIdx(Integer indice, String data, String hora, int idade, String sexo, String sitVitima, String tipoAcid, int auto, int taxi, int onibusUrb, int onibusMet, int onibusInt,
+    public void addAcidenteIdx(Integer indice, int id, String data, String hora, int idade, String sexo, String sitVitima, String tipoAcid, int auto, int taxi, int onibusUrb, int onibusMet, int onibusInt,
                                int caminhao, int moto, int carroca, int bicicleta, int outro, int lotacao, String diaSem,
                                String periodoDia, String fxEt, String tipoVeic) {
-        Acidente inserir = new Acidente(null, data, hora, idade, sexo, sitVitima, this.rua, tipoAcid, auto, taxi, onibusUrb,
+        Acidente inserir = new Acidente(null, id, data, hora, idade, sexo, sitVitima, this.rua, tipoAcid, auto, taxi, onibusUrb,
                 onibusMet, onibusInt, caminhao, moto, carroca, bicicleta, outro, lotacao, diaSem, periodoDia, fxEt, tipoVeic);
 
         // Lança exceção se o índice for inválido.
@@ -218,10 +221,10 @@ public class ListaDeAcidentes {
      * @param fxEt Faixa etária da vítima.
      * @param tipoVeic Informação descritiva do tipo de veículo onde encontrava-se a vítima naquele acidente.
      */
-    public void addAcidente(String data, String hora, int idade, String sexo, String sitVitima, String tipoAcid, int auto, int taxi, int onibusUrb, int onibusMet, int onibusInt,
+    public void addAcidente(int id, String data, String hora, int idade, String sexo, String sitVitima, String tipoAcid, int auto, int taxi, int onibusUrb, int onibusMet, int onibusInt,
                             int caminhao, int moto, int carroca, int bicicleta, int outro, int lotacao, String diaSem,
                             String periodoDia, String fxEt, String tipoVeic) {
-        Acidente aux = new Acidente(null, data, hora, idade, sexo, sitVitima, this.rua, tipoAcid, auto, taxi, onibusUrb,
+        Acidente aux = new Acidente(null, id, data, hora, idade, sexo, sitVitima, this.rua, tipoAcid, auto, taxi, onibusUrb,
                 onibusMet, onibusInt, caminhao, moto, carroca, bicicleta, outro, lotacao, diaSem, periodoDia, fxEt, tipoVeic);
 
         if (this.head == null) {
@@ -245,7 +248,19 @@ public class ListaDeAcidentes {
 
         // Identifica a coluna (tipo de dado).
         String saida = null;
-        if (coluna.equals("data")) {
+        if (coluna.equals("id")) {
+            // Retorna o tail se o indice for o deste.
+            if (indice == this.count - 1) {
+                return Integer.toString(this.tail.id); 
+            } else {
+                // Procura pelo indice passado.
+                Acidente aux = this.head;
+                for (int i = 0; i < indice; i++) {
+                    aux = aux.next;
+                }
+                saida = Integer.toString(this.tail.id);
+            }
+        } else if (coluna.equals("data")) {
             // Retorna o tail se o indice for o deste.
             if (indice == this.count - 1) {
                 return this.tail.data;
@@ -512,8 +527,6 @@ public class ListaDeAcidentes {
         }
 
         return saida;
-
-
     }
 
     /**
@@ -575,4 +588,23 @@ public class ListaDeAcidentes {
         ant.next = aux.next;
         this.count--;
     }
+    
+    /**
+     * Prucura por um Acidente (nodo) a partir do seu id.
+     * @param id
+     * @return
+     */
+    public int indexOf(int id) {
+        Acidente aux = this.head;
+        int indice = 0;
+
+        // Procura pelo elemento a partir do id.
+        while (aux.id != id) {
+            aux = aux.next;
+            indice++;
+        }
+
+        return indice;
+    }
+
 }
