@@ -58,9 +58,10 @@ public class ListaDeAcidentes {
          * @param fxEt Faixa etária da vítima.
          * @param tipoVeic Informação descritiva do tipo de veículo onde encontrava-se a vítima naquele acidente.
          */
-        public Acidente(Acidente proximo, int id, String data, String hora, int idade, String sexo, String sitVitima,
-                        String log1, String tipoAcid, int auto, int taxi, int onibusUrb, int onibusMet, int onibusInt,
-                        int caminhao, int moto, int carroca, int bicicleta, int outro, int lotacao, String diaSem,
+        public Acidente(Acidente proximo, Integer id, String data, String hora, Integer idade, String sexo,
+                        String sitVitima, String log1, String tipoAcid, Integer auto, Integer taxi, Integer onibusUrb,
+                        Integer onibusMet, Integer onibusInt, Integer caminhao, Integer moto, Integer carroca,
+                        Integer bicicleta, Integer outro, Integer lotacao, String diaSem,
                         String periodoDia, String fxEt, String tipoVeic) {
             this.next = proximo;
             this.id = id;
@@ -86,6 +87,11 @@ public class ListaDeAcidentes {
             this.periodoDia = periodoDia;
             this.fxEt = fxEt;
             this.tipoVeic = tipoVeic;
+        }
+
+        @Override
+        public String toString() {
+            return "acidenteID: " + this.id;
         }
     }
 
@@ -159,8 +165,10 @@ public class ListaDeAcidentes {
      * @param fxEt Faixa etária da vítima.
      * @param tipoVeic Informação descritiva do tipo de veículo onde encontrava-se a vítima naquele acidente.
      */
-    public void addAcidenteIdx(Integer indice, int id, String data, String hora, int idade, String sexo, String sitVitima, String tipoAcid, int auto, int taxi, int onibusUrb, int onibusMet, int onibusInt,
-                               int caminhao, int moto, int carroca, int bicicleta, int outro, int lotacao, String diaSem,
+    public void addAcidenteIdx(Integer indice, Integer id, String data, String hora, Integer idade, String sexo,
+                               String sitVitima, String tipoAcid, Integer auto, Integer taxi, Integer onibusUrb,
+                               Integer onibusMet, Integer onibusInt, Integer caminhao, Integer moto, Integer carroca,
+                               Integer bicicleta, Integer outro, Integer lotacao, String diaSem,
                                String periodoDia, String fxEt, String tipoVeic) {
         Acidente inserir = new Acidente(null, id, data, hora, idade, sexo, sitVitima, this.rua, tipoAcid, auto, taxi, onibusUrb,
                 onibusMet, onibusInt, caminhao, moto, carroca, bicicleta, outro, lotacao, diaSem, periodoDia, fxEt, tipoVeic);
@@ -220,8 +228,10 @@ public class ListaDeAcidentes {
      * @param fxEt Faixa etária da vítima.
      * @param tipoVeic Informação descritiva do tipo de veículo onde encontrava-se a vítima naquele acidente.
      */
-    public void addAcidente(int id, String data, String hora, int idade, String sexo, String sitVitima, String tipoAcid, int auto, int taxi, int onibusUrb, int onibusMet, int onibusInt,
-                            int caminhao, int moto, int carroca, int bicicleta, int outro, int lotacao, String diaSem,
+    public void addAcidente(Integer id, String data, String hora, Integer idade, String sexo,
+                            String sitVitima, String tipoAcid, Integer auto, Integer taxi, Integer onibusUrb,
+                            Integer onibusMet, Integer onibusInt, Integer caminhao, Integer moto, Integer carroca,
+                            Integer bicicleta, Integer outro, Integer lotacao, String diaSem,
                             String periodoDia, String fxEt, String tipoVeic) {
         Acidente aux = new Acidente(null, id, data, hora, idade, sexo, sitVitima, this.rua, tipoAcid, auto, taxi, onibusUrb,
                 onibusMet, onibusInt, caminhao, moto, carroca, bicicleta, outro, lotacao, diaSem, periodoDia, fxEt, tipoVeic);
@@ -607,5 +617,10 @@ public class ListaDeAcidentes {
         }
 
         return -1;
+    }
+
+    @Override
+    public String toString() {
+        return "Lista de acidentes da " + this.rua;
     }
 }

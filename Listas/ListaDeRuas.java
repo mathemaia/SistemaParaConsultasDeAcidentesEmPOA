@@ -27,6 +27,11 @@ public class ListaDeRuas {
             this.next = null;
             this.prev = null;
         }
+
+        @Override
+        public String toString() {
+            return this.nome;
+        }
     }
 
     /**
@@ -142,7 +147,7 @@ public class ListaDeRuas {
 
         // Começa a iteração no primeiro elemento e termina quando alcançar o trailer.
         while (aux != this.trailer) {
-            if (Objects.equals(aux.nome, rua)) {
+            if (aux.nome.equals(rua)) {
                 contem = true;
                 break;
             }
@@ -154,8 +159,8 @@ public class ListaDeRuas {
     /**
      * Retorna a ListaDeAcidentes (elemento) da Rua (nodo) de índice passado como parâmentro.
      * Equivalente ao método get().
-     * @param indice posição do elemento.
-     * @return elemento de posição índice.
+     * @param indice indice da Rua (nodo).
+     * @return ListaDeAcidentes (elemento) da Rua (nodo) encontrada.
      */
     public ListaDeAcidentes getAcidentes(int indice) {
         // Checa se o índice é válido.
@@ -171,7 +176,7 @@ public class ListaDeRuas {
      * @param indice índice do nodo.
      * @return Nodo.
      */
-    private Rua getRua(int indice) {
+    public Rua getRua(int indice) {
         // Lança um erro caso o parâmetro passado seja negativo ou maior/igual ao número de elementos.
         if ((indice < 0) || (indice >= count))
             throw new IndexOutOfBoundsException();
@@ -204,11 +209,12 @@ public class ListaDeRuas {
             int idx = 0;
 
             // Itera a lista até encontrar o trailer.
-            for (int i = 0; i < count; i++) {
+            for (int i = -1; i < count; i++) {
                 if (Objects.equals(aux.nome, rua)) {
                     idx = i;
                     break;
                 }
+                aux = aux.next;
             }
 
             return idx;
@@ -245,4 +251,6 @@ public class ListaDeRuas {
     public boolean isEmpty() {
         return this.count == 0;
     }
+
+
 }
