@@ -9,21 +9,20 @@ import java.util.Objects;
  */
 
 public class ListaDeRuas {
-    // Contador de elementos.
-    private int count;
-    // Sentinelas.
-    private final Rua head;
-    private final Rua tail;
-
     /**
      * Classe interna Nodo. Contém um elemento, uma referência para o Nodo anterior outra para o próximo
      */
     private static class Rua {
+        // Nome da rua.
+        private String nome;
+        // Elemento do nodo: lista de acidentes.
         private ListaDeAcidentes acidentes;
+        // Referência para os nodos (Ruas) adjacentes.
         private Rua next;
         private Rua prev;
 
-        public Rua(ListaDeAcidentes acidentes) {
+        public Rua(String nome, ListaDeAcidentes acidentes) {
+            this.nome = nome;
             this.acidentes = acidentes;
             this.next = null;
             this.prev = null;
@@ -34,44 +33,50 @@ public class ListaDeRuas {
      * Construtor.
      */
     public ListaDeRuas() {
-        this.head = new Rua(null);
-        this.tail = new Rua(null);
-        this.head.next = this.tail;
-        this.tail.prev = this.head;
+        this.header = new Rua(null,null);
+        this.trailer = new Rua(null, null);
+        this.header.next = this.trailer;
+        this.trailer.prev = this.header;
         this.count = 0;
     }
 
+    // Contador de elementos.
+    private int count;
+    // Sentinelas.
+    private final Rua header;
+    private final Rua trailer;
+
     /**
-     * Adiciona um elemento à última posição da lista.
+     * Adiciona uma Rua (nodo) com sua ListaDeAcidentes (elemento) à última posição da lista.
      * @param acidentes elemento a ser inserido.
      */
-    public void add(ListaDeAcidentes acidentes) {
-        Rua aux = new Rua(acidentes);
+    public void add(String nome, ListaDeAcidentes acidentes) {
+        Rua aux = new Rua(nome, acidentes);
 
         // Conecta o nodo na última posição da lista.
-        aux.next = this.tail;
-        aux.prev = this.tail.prev;
-        this.tail.prev.next = aux;
-        this.tail.prev = aux;
+        aux.next = this.trailer;
+        aux.prev = this.trailer.prev;
+        this.trailer.prev.next = aux;
+        this.trailer.prev = aux;
 
         this.count++;
     }
 
     /**
-     * Adiciona um elemento (ListaDeAcidentes) por indice.
+     * Adiciona uma ListaDeAcidentes (elemento) por indice.
      * @param acidentes elemento a ser inserido na lista.
      * @param indice indice do elemento a ser inserido.
      */
-    public void set(int indice, ListaDeAcidentes acidentes) {
+    public void add(int indice, String nome, ListaDeAcidentes acidentes) {
         // Lança uma exceção se o indice passado for inválido.
         if ((indice > this.count) || (indice < 0))
             throw new IndexOutOfBoundsException("Indice inválido!");
 
         // Se o índice for igual ao tamanho atual da lista, adiciona no fim.
-        if (this.count == indice) add(acidentes);
+        if (this.count == indice) add(nome, acidentes);
 
         // Percorre a lista até o índice passado.
-        Rua aux = new Rua(acidentes);
+        Rua aux = new Rua(nome, acidentes);
         Rua ptr = getRua(indice);
 
         // Linka o novo Nodo como o próximo do Nodo de índice passado.
@@ -84,52 +89,32 @@ public class ListaDeRuas {
     }
 
     /**
-     * Retorna o Nodo do índice passado como parâmetro sem removê-lo.
-     *
-     * @param indice índice do nodo.
-     * @return Nodo.
+     * Remove a primeira ocorrência da Rua (nodo) na lista - se existir.
+     * @param rua nome da Rua (nodo) a ser removida da lista.
+     * @return true ou false se a lista contém a Rua (nodo) especificada.
      */
-    public Rua getRua(int indice) {
-        // Lança um erro caso o parâmetro passado seja negativo ou maior/igual ao número de elementos.
-        if ((indice < 0) || (indice >= count))
-            throw new IndexOutOfBoundsException();
+    public boolean remove(String rua) {
+        Rua aux = header.next;
 
-        // Percorre a lista até o índice passado como parâmentro.
-        Rua aux;
-        if (indice <= (this.count / 2)) {
-            aux = this.head.next;
-            for (int i = 0; i < indice; i++) {
-                aux = aux.next;
+        // Percorre a lista de ruas até o trailer.
+        while (aux != trailer) {
+            if (Objects.equals(aux.nome, rua)) {
+                aux.prev.next = aux.next;
+                aux.next.prev = aux.prev;
+                this.count--;
+                return true;
             }
-        } else {
-            aux = this.tail.prev;
-            for (int i = count - 1; i > indice; i--) {
-                aux = aux.prev;
-            }
+            aux = aux.next;
         }
-
-        return aux;
+        return false;
     }
 
     /**
-     * Retorna o elemento do índice passado como parâmentro.
-     * @param indice posição do elemento.
-     * @return elemento de posição índice.
+     * Remove a Rua (nodo) de posição indice e retorna sua ListaDeAcidentes (elemento).
+     * @param indice posição da Rua (elemento) a ser removida.
+     * @return ListaDeAcidentes (elemento) da Rua (nodo) removida.
      */
-    public Integer get(int indice) {
-        // Checa se o índice é válido.
-        if ((indice < 0) || (indice >= this.count))
-            throw new IndexOutOfBoundsException("Indice invalido!");
-
-        return getRua(indice).acidentes;
-    }
-
-    /**
-     * Remove o elemento de posição indice.
-     * @param indice posição do elemento a ser removido.
-     * @return elemento removido.
-     */
-    public Integer remove(int indice) {
+    public ListaDeAcidentes removeByIndex(int indice) {
         // Verifica se o index é válido.
         if ((indice < 0) || (indice >= count))
             throw new IndexOutOfBoundsException("Indice invalido!");
@@ -145,33 +130,17 @@ public class ListaDeRuas {
     }
 
     /**
-     * Retorna um valor booleano para se a lista está ou não vazia.
+     * Retorna um valor booleano para se existe a Rua (nodo) passado como parâmetro.
+     * @param rua nome da rua a ser procurada na lista de ruas.
      * @return true ou false.
      */
-    public boolean isEmpty() {
-        return this.count == 0;
-    }
-
-    /**
-     * Retorna o tamanho atual da lista.
-     * @return tamanho atual.
-     */
-    public int size() {
-        return this.count;
-    }
-
-    /**
-     * Retorna um valor booleano para se existe o elemento passado como parâmetro.
-     * @param elemento elemento a ser procurado.
-     * @return true ou false.
-     */
-    public boolean contains(Integer elemento) {
-        Rua aux = this.head.next;
+    public boolean contains(String rua) {
+        Rua aux = this.header.next;
         boolean contem = false;
 
         // Começa a iteração no primeiro elemento e termina quando alcançar o trailer.
-        while (aux != this.tail) {
-            if (Objects.equals(aux.acidentes, elemento)) {
+        while (aux != this.trailer) {
+            if (Objects.equals(aux.nome, rua)) {
                 contem = true;
                 break;
             }
@@ -181,18 +150,60 @@ public class ListaDeRuas {
     }
 
     /**
-     * Retorna o indice da primeira aparição do elemento. Caso não exista, retorna -1.
-     * @param elemento elemento a ter o indice retornado.
-     * @return indice do elemento passado como parâmetro.
+     * Retorna a ListaDeAcidentes (elemento) da Rua (nodo) de índice passado como parâmentro.
+     * Equivalente ao método get().
+     * @param indice posição do elemento.
+     * @return elemento de posição índice.
      */
-    public int indexOf(Integer elemento) {
-        if (contains(elemento)) {
-            Rua aux = this.head.next;
+    public ListaDeAcidentes getAcidentes(int indice) {
+        // Checa se o índice é válido.
+        if ((indice < 0) || (indice >= this.count))
+            throw new IndexOutOfBoundsException("Indice invalido!");
+
+        return getRua(indice).acidentes;
+    }
+
+    /**
+     * Retorna a Rua (nodo) do índice passado como parâmetro sem removê-lo.
+     * Equivalente ao método getNodeIndex().
+     * @param indice índice do nodo.
+     * @return Nodo.
+     */
+    private Rua getRua(int indice) {
+        // Lança um erro caso o parâmetro passado seja negativo ou maior/igual ao número de elementos.
+        if ((indice < 0) || (indice >= count))
+            throw new IndexOutOfBoundsException();
+
+        // Percorre a lista até o índice passado como parâmentro.
+        Rua aux;
+        if (indice <= (this.count / 2)) {
+            aux = this.header.next;
+            for (int i = 0; i < indice; i++) {
+                aux = aux.next;
+            }
+        } else {
+            aux = this.trailer.prev;
+            for (int i = count - 1; i > indice; i--) {
+                aux = aux.prev;
+            }
+        }
+
+        return aux;
+    }
+
+    /**
+     * Retorna o indice da primeira aparição da Rua (nodo). Caso não exista, retorna -1.
+     * @param rua Rua (nodo) a ser procurada e ter o indice retornado.
+     * @return indice da Rua (nodo) passado como parâmetro.
+     */
+    public int indexOf(String rua) {
+        if (contains(rua)) {
+            Rua aux = this.header.next;
             int idx = 0;
 
             // Itera a lista até encontrar o trailer.
             for (int i = 0; i < count; i++) {
-                if (Objects.equals(aux.acidentes, elemento)) {
+                if (Objects.equals(aux.nome, rua)) {
                     idx = i;
                     break;
                 }
@@ -205,47 +216,31 @@ public class ListaDeRuas {
     }
 
     /**
-     * Esvazia a lista.
+     *
+     */
+
+    /**
+     * Esvazia a lista de ruas.
      */
     public void clear() {
-        this.head.next = this.tail;
-        this.tail.prev = this.head;
+        this.header.next = this.trailer;
+        this.trailer.prev = this.header;
         this.count = 0;
     }
 
     /**
-     * Imprime no terminal todos os elementos da lista.
-     * @return todos os elementos da lista.
+     * Retorna o tamanho atual da lista.
+     * @return tamanho atual.
      */
-    @Override
-    public String toString() {
-        StringBuilder s = new StringBuilder();
-        Rua aux = head.next;
-        for (int i = 0; i < this.count; i++) {
-            s.append(aux.acidentes.toString());
-            s.append("\n");
-            aux = aux.next;
-        }
-
-        return s.toString();
+    public int size() {
+        return this.count;
     }
 
     /**
-     * Retorna a quantidade vezes que o elemento passado como parâmetro aparece na lista.
-     * @param elemento elemento a ser contabilizado.
-     * @return quantidade de vezes que o elemento aparece.
+     * Retorna um valor booleano para se a lista está ou não vazia.
+     * @return true ou false.
      */
-    public int countOccurrences(Integer elemento) {
-        Rua aux = head.next;
-        int contador = 0;
-
-        for (int i = 0; i < this.count; i++) {
-            if (aux.acidentes.equals(elemento)) {
-                contador++;
-            }
-            aux = aux.next;
-        }
-
-        return contador;
+    public boolean isEmpty() {
+        return this.count == 0;
     }
 }
