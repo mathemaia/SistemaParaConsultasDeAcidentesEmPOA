@@ -67,25 +67,27 @@ public class ListaDeRuas {
      * @param acidentes elemento a ser inserido na lista.
      * @param indice indice do elemento a ser inserido.
      */
-    public void add(int indice, String nome, ListaDeAcidentes acidentes) {
+    public void addByIndex(int indice, String nome, ListaDeAcidentes acidentes) {
         // Lança uma exceção se o indice passado for inválido.
         if ((indice > this.count) || (indice < 0))
             throw new IndexOutOfBoundsException("Indice inválido!");
 
         // Se o índice for igual ao tamanho atual da lista, adiciona no fim.
-        if (this.count == indice) add(nome, acidentes);
+        if (this.count == indice) {
+            add(nome, acidentes);
+        } else {
+            // Percorre a lista até o índice passado.
+            Rua aux = new Rua(nome, acidentes);
+            Rua ptr = getRua(indice);
 
-        // Percorre a lista até o índice passado.
-        Rua aux = new Rua(nome, acidentes);
-        Rua ptr = getRua(indice);
+            // Linka o novo Nodo como o próximo do Nodo de índice passado.
+            ptr.prev.next = aux;
+            aux.prev = ptr.prev;
+            ptr.prev = aux;
+            aux.next = ptr;
 
-        // Linka o novo Nodo como o próximo do Nodo de índice passado.
-        ptr.prev.next = aux;
-        aux.prev = ptr.prev;
-        ptr.prev = aux;
-        aux.next = ptr;
-
-        this.count++;
+            this.count++;
+        }
     }
 
     /**
