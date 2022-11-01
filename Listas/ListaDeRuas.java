@@ -16,14 +16,14 @@ public class ListaDeRuas {
         // Nome da rua.
         private String nome;
         // Elemento do nodo: lista de acidentes.
-        private ListaDeAcidentes acidentes;
+        private ListaDeAcidentes listaDeAcidentes;
         // Referência para os nodos (Ruas) adjacentes.
         private Rua next;
         private Rua prev;
 
-        public Rua(String nome, ListaDeAcidentes acidentes) {
+        public Rua(String nome, ListaDeAcidentes listaDeAcidentes) {
             this.nome = nome;
-            this.acidentes = acidentes;
+            this.listaDeAcidentes = listaDeAcidentes;
             this.next = null;
             this.prev = null;
         }
@@ -133,7 +133,7 @@ public class ListaDeRuas {
 
         // Retorna o elemento.
         this.count--;
-        return aux.acidentes;
+        return aux.listaDeAcidentes;
     }
 
     /**
@@ -159,15 +159,15 @@ public class ListaDeRuas {
     /**
      * Retorna a ListaDeAcidentes (elemento) da Rua (nodo) de índice passado como parâmentro.
      * Equivalente ao método get().
-     * @param indice indice da Rua (nodo).
+     * @param indiceRua indice da Rua (nodo).
      * @return ListaDeAcidentes (elemento) da Rua (nodo) encontrada.
      */
-    public ListaDeAcidentes getAcidentes(int indice) {
+    public ListaDeAcidentes listaDeAcidentes(int indiceRua) {
         // Checa se o índice é válido.
-        if ((indice < 0) || (indice >= this.count))
+        if ((indiceRua < 0) || (indiceRua >= this.count))
             throw new IndexOutOfBoundsException("Indice invalido!");
 
-        return getRua(indice).acidentes;
+        return getRua(indiceRua).listaDeAcidentes;
     }
 
     /**
@@ -179,7 +179,7 @@ public class ListaDeRuas {
     public Rua getRua(int indice) {
         // Lança um erro caso o parâmetro passado seja negativo ou maior/igual ao número de elementos.
         if ((indice < 0) || (indice >= count))
-            throw new IndexOutOfBoundsException();
+            throw new IndexOutOfBoundsException("Indice invalido!");
 
         // Percorre a lista até o índice passado como parâmentro.
         Rua aux;
@@ -209,7 +209,7 @@ public class ListaDeRuas {
             int idx = 0;
 
             // Itera a lista até encontrar o trailer.
-            for (int i = -1; i < count; i++) {
+            for (int i = 0; i < count; i++) {
                 if (Objects.equals(aux.nome, rua)) {
                     idx = i;
                     break;
@@ -222,10 +222,6 @@ public class ListaDeRuas {
 
         return -1;
     }
-
-    /**
-     *
-     */
 
     /**
      * Esvazia a lista de ruas.

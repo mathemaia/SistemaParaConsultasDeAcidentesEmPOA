@@ -8,7 +8,6 @@ public class ListaDeAcidentes {
         // Referência para o próximo nodo.
         private Acidente next;
         // Dados do acidente.
-        private int id;
         private String data;
         private String hora;
         private int idade;
@@ -58,13 +57,12 @@ public class ListaDeAcidentes {
          * @param fxEt Faixa etária da vítima.
          * @param tipoVeic Informação descritiva do tipo de veículo onde encontrava-se a vítima naquele acidente.
          */
-        public Acidente(Acidente proximo, Integer id, String data, String hora, Integer idade, String sexo,
+        public Acidente(Acidente proximo, String data, String hora, Integer idade, String sexo,
                         String sitVitima, String log1, String tipoAcid, Integer auto, Integer taxi, Integer onibusUrb,
                         Integer onibusMet, Integer onibusInt, Integer caminhao, Integer moto, Integer carroca,
                         Integer bicicleta, Integer outro, Integer lotacao, String diaSem,
                         String periodoDia, String fxEt, String tipoVeic) {
             this.next = proximo;
-            this.id = id;
             this.data = data;
             this.hora = hora;
             this.idade = idade;
@@ -91,7 +89,12 @@ public class ListaDeAcidentes {
 
         @Override
         public String toString() {
-            return "acidenteID: " + this.id;
+            return "\nDATA: "+data+"\n"+"HORA: "+hora+"\n"+"IDADE: "+idade+"\n"+"SEXO: "+sexo+"\n"+
+                    "SIT_VITIMA: "+sitVitima+"\n"+"RUA: "+log1+"\n"+"TIPO_ACID: "+tipoVeic+"\n"+"AUTO: "+auto+"\n"+
+                    "TAXI: "+taxi+"\n"+"ONIBUS_URB: "+onibusUrb+"\n"+"ONIBUS_MET: "+onibusMet+"\n"+
+                    "ONIBUS_INT: "+onibusInt+"\n"+"CAMINHAO"+caminhao+"\n"+"MOTO: "+moto+"\n"+"CARROCA: "+carroca+"\n"+
+                    "BICICLETA: "+bicicleta+"\n"+"OUTRO: "+outro+"\n"+"LOTACAO: "+lotacao+"\n"+"DIA_SEM: "+diaSem+"\n"+
+                    "PERIODO_DIA: " + periodoDia+"\n"+"FX_ET: "+fxEt+"\n"+"TIPO_VEIC: "+tipoVeic+"\n";
         }
     }
 
@@ -165,12 +168,12 @@ public class ListaDeAcidentes {
      * @param fxEt Faixa etária da vítima.
      * @param tipoVeic Informação descritiva do tipo de veículo onde encontrava-se a vítima naquele acidente.
      */
-    public void addAcidenteIdx(Integer indice, Integer id, String data, String hora, Integer idade, String sexo,
+    public void addAcidenteIdx(Integer indice, String data, String hora, Integer idade, String sexo,
                                String sitVitima, String tipoAcid, Integer auto, Integer taxi, Integer onibusUrb,
                                Integer onibusMet, Integer onibusInt, Integer caminhao, Integer moto, Integer carroca,
                                Integer bicicleta, Integer outro, Integer lotacao, String diaSem,
                                String periodoDia, String fxEt, String tipoVeic) {
-        Acidente inserir = new Acidente(null, id, data, hora, idade, sexo, sitVitima, this.rua, tipoAcid, auto, taxi, onibusUrb,
+        Acidente inserir = new Acidente(null, data, hora, idade, sexo, sitVitima, this.rua, tipoAcid, auto, taxi, onibusUrb,
                 onibusMet, onibusInt, caminhao, moto, carroca, bicicleta, outro, lotacao, diaSem, periodoDia, fxEt, tipoVeic);
 
         // Lança exceção se o índice for inválido.
@@ -228,12 +231,12 @@ public class ListaDeAcidentes {
      * @param fxEt Faixa etária da vítima.
      * @param tipoVeic Informação descritiva do tipo de veículo onde encontrava-se a vítima naquele acidente.
      */
-    public void addAcidente(Integer id, String data, String hora, Integer idade, String sexo,
-                            String sitVitima, String tipoAcid, Integer auto, Integer taxi, Integer onibusUrb,
+    public void addAcidente(String data, String hora, Integer idade, String sexo,
+                            String sitVitima, String rua, String tipoAcid, Integer auto, Integer taxi, Integer onibusUrb,
                             Integer onibusMet, Integer onibusInt, Integer caminhao, Integer moto, Integer carroca,
                             Integer bicicleta, Integer outro, Integer lotacao, String diaSem,
                             String periodoDia, String fxEt, String tipoVeic) {
-        Acidente aux = new Acidente(null, id, data, hora, idade, sexo, sitVitima, this.rua, tipoAcid, auto, taxi, onibusUrb,
+        Acidente aux = new Acidente(null, data, hora, idade, sexo, sitVitima, this.rua, tipoAcid, auto, taxi, onibusUrb,
                 onibusMet, onibusInt, caminhao, moto, carroca, bicicleta, outro, lotacao, diaSem, periodoDia, fxEt, tipoVeic);
 
         if (this.head == null) {
@@ -522,18 +525,6 @@ public class ListaDeAcidentes {
                 }
                 saida = aux.tipoVeic;
             }
-        } else if (coluna.equals("id")){
-            // Retorna o tail se o indice for o deste.
-            if (indice == this.count - 1) {
-                return Integer.toString(this.tail.id);
-            } else {
-                // Procura pelo indice passado.
-                Acidente aux = this.head;
-                for (int i = 0; i < indice; i++) {
-                    aux = aux.next;
-                }
-                saida = Integer.toString(aux.id);
-            }
         } else {
             throw new NullPointerException("Coluna inválida!");
         }
@@ -599,24 +590,6 @@ public class ListaDeAcidentes {
         assert ant != null;
         ant.next = aux.next;
         this.count--;
-    }
-
-    /**
-     * Prucura por um Acidente (nodo) a partir do seu id.
-     * @param id identificação do acidente.
-     */
-    public int indexOfId(int id) {
-        Acidente aux = this.head;
-
-        // Procura pelo elemento a partir do id.
-        for (int i = 0; i < this.count; i++) {
-            if (aux.id == id) {
-                return i;
-            }
-            aux = aux.next;
-        }
-
-        return -1;
     }
 
     @Override
