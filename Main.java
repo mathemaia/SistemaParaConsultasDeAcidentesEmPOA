@@ -6,7 +6,7 @@ import java.io.FileNotFoundException;
 public class Main {
     public static void main(String[] args) throws FileNotFoundException {
         // Cria uma lista com todas as ruas e todos os seus respectivos acidentes.
-        BancoDeDados dataset = new BancoDeDados("src/Dados/vitimas.csv");
+        BancoDeDados dataset = new BancoDeDados("Dados/vitimas.csv");
 
         // Mostra (neste caso) as 3 ruas com mais acidentes.
         System.out.println("***********************************");
