@@ -55,16 +55,20 @@ public class ListaDeRuas {
      * Adiciona uma Rua (nodo) com sua ListaDeAcidentes (elemento) à última posição da lista.
      * @param acidentes elemento a ser inserido.
      */
-    public void add(String nome, ListaDeAcidentes acidentes) {
-        Rua aux = new Rua(nome, acidentes);
+    public void addRua(String nome, ListaDeAcidentes acidentes) {
+        if (contains(nome)) {
+            System.out.println("Já existe uma rua com este nome.");
+        } else {
+            Rua aux = new Rua(nome, acidentes);
 
-        // Conecta o nodo na última posição da lista.
-        aux.next = this.trailer;
-        aux.prev = this.trailer.prev;
-        this.trailer.prev.next = aux;
-        this.trailer.prev = aux;
+            // Conecta o nodo na última posição da lista.
+            aux.next = this.trailer;
+            aux.prev = this.trailer.prev;
+            this.trailer.prev.next = aux;
+            this.trailer.prev = aux;
 
-        this.count++;
+            this.count++;
+        }
     }
 
     /**
@@ -79,7 +83,7 @@ public class ListaDeRuas {
 
         // Se o índice for igual ao tamanho atual da lista, adiciona no fim.
         if (this.count == indice) {
-            add(nome, acidentes);
+            addRua(nome, acidentes);
         } else {
             // Percorre a lista até o índice passado.
             Rua aux = new Rua(nome, acidentes);

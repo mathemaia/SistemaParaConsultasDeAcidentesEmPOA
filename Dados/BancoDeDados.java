@@ -5,35 +5,21 @@ import java.io.FileNotFoundException;
 import java.util.Scanner;
 import Listas.ListaDeRuas;
 import Listas.ListaDeAcidentes;
+import Listas.ListaEncadeada;
 
 public class BancoDeDados {
-    private ListaDeAcidentes acidentes;
-    private ListaDeRuas ruas;
-    private String[][] matriz;
-    private int qtdLinhas;
-
-    public BancoDeDados(String endereco) throws FileNotFoundException {
-        qtdLinhas(endereco);
-        this.matriz = new String[this.qtdLinhas][22];
-        lerArquivo(endereco);
-    }
+    private ListaDeRuas listaDeRuas;
 
     /**
-     * Método que conta a quantidade de linhas do banco de dados para criar a matriz de dados.
-     * @param endereco endereço do arquivo.
-     * @throws FileNotFoundException lança uma exceção caso não encontre o arquivo.
+     * Construtor.
+     * @param endereco endereço do arquivo .csv
+     * @throws FileNotFoundException lança exceção caso o arquivo não seja encontrado.
      */
-    private void qtdLinhas(String endereco) throws FileNotFoundException {
-        Scanner in = new Scanner(new File(endereco));
-
-        // Conta a quantidade de linhas para criar a matriz de dados.
-        while (in.hasNextLine()) {
-            String linha = in.nextLine();
-            this.qtdLinhas++;
-        }
+    public BancoDeDados(String endereco) throws FileNotFoundException {
+        this.listaDeRuas = new ListaDeRuas();
+        lerArquivo(endereco);
+        criaListasDeAcidentes(this.listaDeRuas, endereco);
     }
-
-
 
     /**
      * Cria a matriz de dados.
@@ -43,64 +29,78 @@ public class BancoDeDados {
     private void lerArquivo(String endereco) throws FileNotFoundException {
         Scanner in = new Scanner(new File(endereco));
 
-        // Conta a quantidade de linhas.
-        for (int i = 0; in.hasNextLine(); i++) {
-            String[] linha = in.nextLine().split(";");
-            System.arraycopy(linha, 0, this.matriz[i], 0, 22);
-        }
-
-    }
-
-
-    /**
-     * Retorna a matriz de dados.
-     * @return matriz de dados;
-     */
-    public String[][] getMatriz() {
-        return this.matriz;
-    }
-
-    public static void main(String[] args) throws FileNotFoundException {
-        BancoDeDados dataset = new BancoDeDados("src/Dados/vitimas.csv");
-        ListaDeRuas ruas = new ListaDeRuas();
-        ListaDeAcidentes acidentes;
-
-        // Contador de linhas.
-
-        // Cria todas as Ruas (nodos) da lista de ruas.
-        String[][] dados = dataset.getMatriz();
-        int qtdRuas = 0;
-        /*
-        for (int i = 1; i < dataset.getQtdLinhas(); i++) {
-            if (!ruas.contains(dados[i][5])) {
-                ruas.add(dados[i][5], new ListaDeAcidentes(dados[i][5]));
-                qtdRuas++;
+        // Identifica a coluna da rua.
+        String[] colunas = in.nextLine().split(";");
+        int idx = 0;
+        for (int i = 0; i < colunas.length; i++) {
+            if (colunas[i].equals("log1")) {
+                idx = i;
             }
         }
-         */
 
-        System.out.println(qtdRuas);
-        // Cria a lista de acidentes de cada Rua e adiciona seus respectivos acidentes.
-        for (int i = 0; i < qtdRuas; i++) {
-            // Procura a Rua (nodo) da linha de indice 'i' do dataset.
-            // Quando as Ruas se repetirem, adicionará outro acidente à lista de acidentes desta rua.
-            int idx = ruas.indexOf(dados[i][5]);
-            //System.out.println(dados[i][5]);
-            // Adiciona o acidente de indice 'i' do dataset.
-            /*
-            ruas.getAcidentes(idx).addAcidente(dados[i][0], dados[i][1], Integer.parseInt(dados[i][2]), dados[i][3],
-                    dados[i][4], dados[i][5], dados[i][6], Integer.parseInt(dados[i][7]),
-                    Integer.parseInt(dados[i][8]), Integer.parseInt(dados[i][9]), Integer.parseInt(dados[i][10]),
-                    Integer.parseInt(dados[i][11]), Integer.parseInt(dados[i][12]), Integer.parseInt(dados[i][13]),
-                    Integer.parseInt(dados[i][14]), Integer.parseInt(dados[i][15]), Integer.parseInt(dados[i][16]),
-                    Integer.parseInt(dados[i][17]), dados[i][18], dados[i][19], dados[i][20], dados[i][21]);
-             */
-
+        // Cria a lista com todas as ruas.
+        while (in.hasNextLine()) {
+            String[] linha = in.nextLine().split(";");
+            if (!this.listaDeRuas.contains(linha[idx])) {
+                this.listaDeRuas.addRua(linha[idx], new ListaDeAcidentes(linha[idx]));
+            }
         }
 
-        //System.out.println(ruas.getAcidentes(0).getAcidente(0));
 
+    }
 
+    /**
+     * Cria as listas de acidente dentro de cada rua.
+     * @param ruas objeto privado ListaDeRua da qual será inserida a lista de acidentes.
+     * @param endereco nome da rua que irá receber a lista de acidentes.
+     * @throws FileNotFoundException lança uma exceção caso o arquivo não possa ser aberto.
+     */
+    private void criaListasDeAcidentes(ListaDeRuas ruas, String endereco) throws FileNotFoundException {
+        Scanner in = new Scanner(new File(endereco));
 
+        for (int i = 0; in.hasNextLine(); i++) {
+            String[] linha = in.nextLine().split(";");
+            if (ruas.indexOf(linha[5]) != -1) {
+                int idxRua = ruas.indexOf(linha[5]);
+                this.listaDeRuas.listaDeAcidentes(idxRua).addAcidente(linha[0], linha[1], Integer.parseInt(linha[2]), linha[3], linha[4],
+                        linha[5], linha[6], Integer.parseInt(linha[7]), Integer.parseInt(linha[8]), Integer.parseInt(linha[9]),
+                        Integer.parseInt(linha[10]), Integer.parseInt(linha[11]), Integer.parseInt(linha[12]), Integer.parseInt(linha[13]),
+                        Integer.parseInt(linha[14]), Integer.parseInt(linha[15]), Integer.parseInt(linha[16]), Integer.parseInt(linha[17]),
+                        linha[18], linha[19], linha[20], linha[21]);
+            }
+        }
+    }
+
+    /**
+     * Método que mostra as N ruas com maior quantidade de acidentes.
+     * Ex:  maisAcidentes(3) -> retorna as 3 ruas com mais acidentes.
+     * @param qtdRuas quantidade de ruas a serem exibidas.
+     */
+    public void ruasComMaisAcidentes(int qtdRuas) {
+        // Cria uma lista encadeada contendo o total de todos os acidentes por rua.
+        ListaEncadeada qtds = new ListaEncadeada();
+        for (int i = 0; i < this.listaDeRuas.size(); i++) {
+            String nome = String.valueOf(this.listaDeRuas.getRua(i));
+            //System.out.println(nome);
+            qtds.add(nome, this.listaDeRuas.listaDeAcidentes(i).size());
+            //System.out.println(this.listaDeRuas.listaDeAcidentes(i).size());
+        }
+
+        // Organiza as quantidades de acidente de cada rua em uma lista.
+        qtds.organize();
+
+        // Saídas.
+        for (int i = 0; i < qtdRuas; i++) {
+            System.out.println(qtds.nome(i));
+            System.out.println(qtds.element(i));
+        }
+    }
+
+    /**
+     * Retorna a lista de ruas.
+     * @return ListaDeRuas.
+     */
+    public ListaDeRuas listaDeRuas() {
+        return this.listaDeRuas;
     }
 }

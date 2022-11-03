@@ -1,35 +1,57 @@
+import Dados.BancoDeDados;
+
 import Listas.ListaDeAcidentes;
-import Listas.ListaDeRuas;
-import java.util.Scanner;
+import java.io.FileNotFoundException;
 
 public class Main {
-    public static void main(String[] args) {
-        ListaDeRuas ruas = new ListaDeRuas();
+    public static void main(String[] args) throws FileNotFoundException {
+        // Cria uma lista com todas as ruas e todos os seus respectivos acidentes.
+        BancoDeDados dataset = new BancoDeDados("src/Dados/vitimas.csv");
 
-        for (int i = 0; i < 3; i++) {
-            String nome = "Rua - " + i;
-            // Cria uma lista de acidentes.
-            ListaDeAcidentes acidentes = new ListaDeAcidentes(nome);
+        // Mostra (neste caso) as 3 ruas com mais acidentes.
+        System.out.println("***********************************");
+        System.out.println("----- Ruas com mais acidentes -----");
+        dataset.ruasComMaisAcidentes(3);
+        System.out.println("-----------------------------------");
+        System.out.println();
 
-            // Adiciona acidentes na lista de acidentes.
-            for (int j = 0; j < 4; j++) {
-                acidentes.addAcidente(j, (i + "/" + i + "/" + i), (i + ":00"), i, null, null, null, i, i, i, i,
-                        i, i, i, i, i, i, i, null, null, null, null);
-            }
-
-            // Adiciona uma rua a lista de ruas com uma lista de acidentes.
-            ruas.add(nome, acidentes);
-            ruas.getRua(i);
+        // Mostra os 3 primeiros acidentes da rua de indice 0.
+        System.out.println("***********************************");
+        System.out.println("------- Exemplo de consulta -------");
+        System.out.println("Rua: " + dataset.listaDeRuas().getRua(0));
+        for (int i = 0; i < 2; i++) {
+            System.out.println(dataset.listaDeRuas().listaDeAcidentes(0).getAcidente(i));
         }
+        System.out.println("-----------------------------------");
+        System.out.println();
 
+        // Mostra o tamanho total da lista de ruas.
+        System.out.println("***********************************");
+        System.out.println("---- Qtd. de ruas registradas -----");
+        System.out.println(dataset.listaDeRuas().size());
+        System.out.println("-----------------------------------");
+        System.out.println();
 
-        for (int i = 0; i < ruas.size(); i++) {
-            System.out.println(ruas.getRua(i) );
-            System.out.println("    " + ruas.getAcidentes(i));
-            for (int j = 0; j < ruas.getAcidentes(i).size(); j++) {
-                System.out.println("        " + ruas.getAcidentes(i).getAcidente(j));
-            }
-        }
+        // Exemplo de inserção de uma nova rua.
+        System.out.println("***********************************");
+        System.out.println("------ Ex. de adicao de Rua -------");
+        String nome = "RUA DE EXEMPLO";
+        dataset.listaDeRuas().addRua(nome, new ListaDeAcidentes(nome));
+        int idx = dataset.listaDeRuas().indexOf(nome);
+        System.out.println("Rua " + nome + " adicionada.");
+        System.out.println("Qtd. acidentes nesta rua: " + dataset.listaDeRuas().listaDeAcidentes(idx).size());
+        System.out.println("Qtd de ruas registradas: " + dataset.listaDeRuas().size());
+        System.out.println("-----------------------------------");
+        System.out.println();
 
+        // Exemplo de inserção de um novo acidente na rua adicionada.
+        System.out.println("***********************************");
+        System.out.println("---- Ex. de adicao de Acidente ----");
+        dataset.listaDeRuas().listaDeAcidentes(idx).addAcidente("00/00/00", "00:00", 0, "sexo",
+                "situacao", nome, "tipo", 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, "dia", "periodo", "faixaEt", "veiculo");
+        System.out.println("Rua: " + nome);
+        System.out.println("Qtd. acidentes nesta rua: " + dataset.listaDeRuas().listaDeAcidentes(idx).size());
+        System.out.println("---- Ex. de adicao de Acidente ----");
     }
 }

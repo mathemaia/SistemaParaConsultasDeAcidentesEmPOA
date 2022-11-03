@@ -94,7 +94,7 @@ public class ListaDeAcidentes {
                     "TAXI: "+taxi+"\n"+"ONIBUS_URB: "+onibusUrb+"\n"+"ONIBUS_MET: "+onibusMet+"\n"+
                     "ONIBUS_INT: "+onibusInt+"\n"+"CAMINHAO"+caminhao+"\n"+"MOTO: "+moto+"\n"+"CARROCA: "+carroca+"\n"+
                     "BICICLETA: "+bicicleta+"\n"+"OUTRO: "+outro+"\n"+"LOTACAO: "+lotacao+"\n"+"DIA_SEM: "+diaSem+"\n"+
-                    "PERIODO_DIA: " + periodoDia+"\n"+"FX_ET: "+fxEt+"\n"+"TIPO_VEIC: "+tipoVeic+"\n";
+                    "PERIODO_DIA: " + periodoDia+"\n"+"FX_ET: "+fxEt+"\n"+"TIPO_VEIC: "+tipoVeic;
         }
     }
 
