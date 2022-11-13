@@ -128,26 +128,47 @@ public class Main {
                         System.out.println("Insira os dados do acidente");
                         System.out.println("-----------------------------------");
                         // Dados que serão inseridos.
+                        System.out.print("data: ");
                         String data = in.next();
+                        System.out.print("hora: ");
                         String hora = in.next();
+                        System.out.print("idade: ");
                         int idade = in.nextInt();
+                        System.out.print("sexo: ");
                         String sexo = in.next();
+                        System.out.print("sitVitima: ");
                         String sitVitima = in.next();
+                        System.out.print("tipoAcid: ");
                         String tipoAcid = in.next();
+                        System.out.print("auto: ");
                         int auto = in.nextInt();
+                        System.out.print("taxi: ");
                         int taxi = in.nextInt();
+                        System.out.print("onibusUrb: ");
                         int onibusUrb = in.nextInt();
+                        System.out.print("onibusMet: ");
                         int onibusMet = in.nextInt();
+                        System.out.print("onibusInt: ");
                         int onibusInt = in.nextInt();
+                        System.out.print("caminhao: ");
                         int caminhao = in.nextInt();
+                        System.out.print("moto: ");
                         int moto = in.nextInt();
+                        System.out.print("carroca: ");
                         int carroca = in.nextInt();
+                        System.out.print("bicicleta: ");
                         int bicicleta = in.nextInt();
+                        System.out.print("outro: ");
                         int outro = in.nextInt();
+                        System.out.print("lotacao: ");
                         int lotacao = in.nextInt();
+                        System.out.print("diaSem: ");
                         String diaSem = in.next();
+                        System.out.print("periodoDia: ");
                         String periodoDia = in.next();
+                        System.out.print("fxEt: ");
                         String fxEt = in.next();
+                        System.out.print("tipoVeic: ");
                         String tipoVeic = in.next();
                         System.out.println("-----------------------------------\n");
                         // Adiciona o acidente com os dados inseridos acima.
@@ -174,28 +195,5 @@ public class Main {
             }
 
             } while (!sair);
-
-
-
-
-
-
-        /*
-
-
-
-
-
-
-
-        // Exemplo de inserção de um novo acidente na rua adicionada.
-
-
-         */
-
-
-
-
-
     }
 }
