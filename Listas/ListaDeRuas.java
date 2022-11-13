@@ -251,6 +251,4 @@ public class ListaDeRuas {
     public boolean isEmpty() {
         return this.count == 0;
     }
-
-
 }

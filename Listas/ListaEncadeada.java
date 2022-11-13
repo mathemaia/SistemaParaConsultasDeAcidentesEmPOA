@@ -116,6 +116,7 @@ public class ListaEncadeada {
 
     /**
      * Adiciona o elemento passado na última posição da lista.
+     * @param nome nome do nodo.
      * @param elemento elemento a ser inserido.
      */
     public void add(String nome, Integer elemento) {
@@ -295,20 +296,19 @@ public class ListaEncadeada {
     }
 
     /**
-     * Conta o número de ocorrências do elemento passado como parâmetro.
-     * @param elemento elemento a ser contabilizado.
-     * @return quantidade de vezes que ele aparece na lista.
+     * Procura pelo nome passasdo como parâmetro e retorna um valor booleano.
+     * @param nome nome do nodo.
+     * @return true ou false.
      */
-    public int countOccurrences(Integer elemento) {
+    public boolean contains(String nome) {
         Nodo aux = this.head;
-        int count = 0;
 
         for (int i = 0; i < this.count; i++) {
-            if (Objects.equals(aux.element, elemento)) count++;
+            if (Objects.equals(aux.nome, nome)) return true;
             aux = aux.next;
         }
 
-        return count;
+        return false;
     }
 
     /**
@@ -338,7 +338,7 @@ public class ListaEncadeada {
     }
 
     /**
-     * Organiza a lista.
+     * Organiza a lista em ordem decrescente.
      */
     public void organize() {
         // Se a lista estiver vazia, lança um erro.

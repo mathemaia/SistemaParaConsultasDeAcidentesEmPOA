@@ -2,7 +2,6 @@ package Dados;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.Arrays;
 import java.util.Objects;
 import java.util.Scanner;
 import Listas.ListaDeRuas;
@@ -99,6 +98,73 @@ public class BancoDeDados {
             System.out.println(qtds.nome(i));
             System.out.println(qtds.element(i));
         }
+    }
+
+    /**
+     * Identifica qual o dia que houve mais acidentes em uma determinada rua.
+     * @param rua nome da rua.
+     * @return dia com mais acidentes.
+     */
+    public String diasComMaisAcidentes(String rua) {
+        ListaEncadeada listaInicial = new ListaEncadeada();
+        int idx = this.listaDeRuas.indexOf(rua);
+        int tam = this.listaDeRuas.listaDeAcidentes(idx).size();
+        // Cria uma lista com elementos únicos (dia) - cada nodo é um dia.
+        for (int i = 0; i < tam; i++) {
+            String[] info = this.listaDeRuas.listaDeAcidentes(idx).getInfo(i, "data").split(" ");
+            String data = info[0];
+            if (!listaInicial.contains(data)) {
+                listaInicial.add(data, null);
+            }
+        }
+        // Adiciona a quantidade de acidentes em cada rua.
+        ListaEncadeada listaFinal = new ListaEncadeada();
+        for (int i = 0; i < listaInicial.size(); i++) {
+            String data = listaInicial.nome(i);
+            int qtdAcidentes = this.listaDeRuas.listaDeAcidentes(idx).acidentesPorDia(data);
+            listaFinal.add(data, qtdAcidentes);
+            this.listaDeRuas.listaDeAcidentes(idx).acidentesPorDia(listaInicial.nome(i));
+        }
+
+        // Organiza a lista em ordem decrescente.
+        listaFinal.organize();
+
+        return listaFinal.nome(0) + ": " + listaFinal.element(0) + " acidentes.";
+    }
+
+    /**
+     * Calcula e mostra os acidentes com maior número de veículos
+     * @param nome nome da rua.
+     * @param quantidade quantidade a ser mostrada.
+     */
+    public ListaEncadeada acidentesComMaisVeiculos(String nome, int quantidade) {
+        ListaEncadeada lista = new ListaEncadeada();
+        int idx = this.listaDeRuas.indexOf(nome);
+        int tam = this.listaDeRuas.listaDeAcidentes(idx).size();
+
+        // Cria uma lista cujo nodo é um acidente único e seu elemento é a qtd. total de veiculos envolvidos.
+        for (int i = 0; i < tam; i++) {
+            String[] info = this.listaDeRuas.listaDeAcidentes(idx).getInfo(i, "data").split(" ");
+            String data = info[0];
+            int qtd = this.listaDeRuas.listaDeAcidentes(idx).qtdVeiculosEnvolvidos(i);
+            lista.add(data, qtd);
+        }
+
+        // Organiza a lista em ordem decrescente.
+        lista.organize();
+
+        // Testa se a quantidade a ser mostrada é válida.
+        ListaEncadeada listaFinal = new ListaEncadeada();
+        if (quantidade > lista.size() || quantidade <= 0) {
+            return null;
+        } else {
+            // Mostra a quantidade definida.
+            for (int i = 0; i < quantidade; i++) {
+                listaFinal.add(lista.nome(i), lista.element(i));
+            }
+        }
+
+        return listaFinal;
     }
 
     /**

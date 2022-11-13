@@ -1,5 +1,7 @@
 package Listas;
 
+import java.util.Objects;
+
 public class ListaDeAcidentes {
     /**
      * Classe interna Nodo. Contém um elemento e uma referência para o próximo.
@@ -590,6 +592,35 @@ public class ListaDeAcidentes {
         assert ant != null;
         ant.next = aux.next;
         this.count--;
+    }
+
+    /**
+     * Conta o número de ocorrências do elemento passado como parâmetro.
+     * @param dia elemento a ser contabilizado.
+     * @return quantidade de vezes que ele aparece na lista.
+     */
+    public int acidentesPorDia(String dia) {
+        Acidente aux = this.head;
+        int count = 0;
+
+        for (int i = 0; i < this.count; i++) {
+            if (aux.data.split(" ")[0].equals(dia)) count++;
+            aux = aux.next;
+        }
+
+        return count;
+    }
+
+    /**
+     * Calcula a quantidade de veiculos envolvidos no acidente de índice passado como parâmetro.
+     * @param indice indice do acidente.
+     * @return quantidade total de veiculos envolvidos.
+     */
+    public int qtdVeiculosEnvolvidos(int indice) {
+        Acidente acidente = getAcidente(indice);
+
+        return acidente.auto + acidente.taxi + acidente.onibusUrb + acidente.onibusMet + acidente.onibusInt +
+                acidente.caminhao + acidente.moto + acidente.carroca + acidente.bicicleta + acidente.outro + acidente.lotacao;
     }
 
     @Override

@@ -2,31 +2,34 @@ import Dados.BancoDeDados;
 
 import java.io.FileNotFoundException;
 import java.util.Scanner;
-import Listas.ListaDeRuas;
 import Listas.ListaDeAcidentes;
+import Listas.ListaEncadeada;
 
 public class Main {
     public static void main(String[] args) throws FileNotFoundException {
         boolean sair = false;
 
         // Cria uma lista com todas as ruas e todos os seus respectivos acidentes.
-        BancoDeDados dataset = new BancoDeDados("Dados/cat_vitimas.csv");
+        BancoDeDados dataset = new BancoDeDados("src/Dados/cat_vitimas.csv");
 
         do {
             // Menu com as opções de interação com o programa.
             Scanner in = new Scanner(System.in);
             System.out.println("[1] Ruas com mais acidentes\n" +
-                    "[2] Qtd. ruas\n" +
-                    "[3] Consultar rua\n" +
-                    "[4] Consultar acidentes\n" +
-                    "[5] Inserir nova rua\n" +
-                    "[6] Inserir novo acidente\n" +
+                    "[2] Dia com mais acidentes\n" +
+                    "[3] Acidentes com mais veiculos\n" +
+                    "[4] Qtd. ruas\n" +
+                    "[5] Consultar rua\n" +
+                    "[6] Consultar acidentes\n" +
+                    "[7] Inserir nova rua\n" +
+                    "[8] Inserir novo acidente\n" +
                     "[0] Sair");
             System.out.print("Digite uma OPÇÃO: ");
 
             // Testa se a opção inserida é inteiro.
             try {
                 int entrada = Integer.parseInt(in.nextLine());
+
 
                 // [1] Ruas com mais acidentes.
                 // Mostra a quantidade definida de ruas com mais acidentes.
@@ -37,18 +40,65 @@ public class Main {
                     dataset.ruasComMaisAcidentes(qtd);
                     System.out.println("-----------------------------------\n");
 
-                // [2] Qtd. ruas
-                // Mostra a quantidade total de ruas na lista.
+
+                // [2] Dia com mais acidentes.
+                // Mostra o dia com mais acidentes em uma rua escolhida.
                 } else if (entrada == 2) {
+                    System.out.print("Digite o nome da Rua: ");
+                    String nome = in.nextLine().toUpperCase();
+
+                    // Se o nome for válido, imprime o dia com mais acidentes.
+                    if (dataset.listaDeRuas().contains(nome)) {
+                        System.out.println("\n----- Dia com mais acidentes ------");
+                        System.out.println("Rua: " + nome);
+                        System.out.println(dataset.diasComMaisAcidentes(nome));
+                        System.out.println("-----------------------------------\n");
+                        // Se não, imprime uma mensagem de erro.
+                    } else {
+                        System.out.println("\nNome de rua inválido...\n");
+                    }
+
+                // [3] Acidentes com mais veiculos.
+                // Mostra a quantidade de veículos envolvida em cada acidente - a qtd. de acidentes a ser mostrada pode ser definida.
+                } else if (entrada == 3) {
+                    System.out.print("Digite o nome da Rua: ");
+                    String nome = in.nextLine().toUpperCase();
+
+                    if (dataset.listaDeRuas().contains(nome)) {
+                        System.out.print("Qtd. a ser mostrada: ");
+                        int qtd = in.nextInt();
+                        ListaEncadeada lista = dataset.acidentesComMaisVeiculos(nome, qtd);
+
+                        if (lista == null) {
+                            System.out.println("\nQuantide inválida...\n");
+                        } else {
+                            System.out.println("\n--- Acidentes com mais veiculos ---");
+                            for (int i = 0; i < lista.size(); i++) {
+                                System.out.println(lista.nome(i) + ": " + lista.element(i) + " acidentes registrados.");
+                            }
+                            System.out.println("-----------------------------------\n");
+
+                        }
+
+                    } else {
+                        System.out.println("\nNome de rua inválido...\n");
+                    }
+
+
+                // [4] Qtd. ruas
+                // Mostra a quantidade total de ruas na lista.
+                } else if (entrada == 4) {
                     System.out.println("\n---------- Qtd. de ruas -----------");
                     System.out.println(dataset.listaDeRuas().size());
                     System.out.println("-----------------------------------\n");
 
-                // [3] Consultar.
+
+                // [5] Consultar.
                 // Pede o nome de uma rua e mostra
-                } else if (entrada == 3) {
+                } else if (entrada == 5) {
                     System.out.print("Digite o nome da RUA: ");
                     String nome = in.nextLine().toUpperCase();
+
                     if (dataset.listaDeRuas().contains(nome)) {
                         int idx = dataset.listaDeRuas().indexOf(nome);
                         System.out.println("\n-----------------------------------");
@@ -69,9 +119,10 @@ public class Main {
                         System.out.println("\nEntrada inválida...\n");
                     }
 
-                // [4] Consultar acidentes
+
+                // [6] Consultar acidentes
                 // Consulta acidentes pela data ocorrida.
-                } else if (entrada == 4) {
+                } else if (entrada == 6) {
                     System.out.print("Digite o nome da RUA: ");
                     String nome = in.nextLine().toUpperCase();
                     System.out.print("Digite uma data: ");
@@ -79,14 +130,18 @@ public class Main {
                     if (dataset.listaDeRuas().contains(nome) && !nome.equals("")) {
                         int idx = dataset.listaDeRuas().indexOf(nome);
                         int count = 0;
+
                         // Procura acidentes na data inserida.
                         for (int i = 0; i < dataset.listaDeRuas().listaDeAcidentes(idx).size(); i++) {
                             if (dataset.listaDeRuas().listaDeAcidentes(idx).getInfo(i, "data").split(" ")[0].equals(data)) {
                                 count++;
                             }
                         }
+
+                        // Se a quantidade for zero, imprime uma mensagem de aviso.
                         if (count == 0) {
                             System.out.println("\nNão existem acidentes registrados nesta data.\n");
+                        // Se não, imprime a consulta.
                         } else {
                             System.out.println("\n-----------------------------------");
                             System.out.println(data);
@@ -98,13 +153,15 @@ public class Main {
                             }
                             System.out.print("-----------------------------------\n\n");
                         }
+
                     } else {
-                        System.out.println("\nNome da rua inválido.\n");
+                        System.out.println("\nNome de rua inválido...\n");
                     }
 
-                // [5] Inserir nova rua
+
+                // [7] Inserir nova rua
                 // Insere uma nova rua na lista de ruas.
-                } else if (entrada == 5) {
+                } else if (entrada == 7) {
                     System.out.print("Nome da RUA: ");
                     String nome = in.nextLine().toUpperCase();
                     dataset.listaDeRuas().addRua(nome, new ListaDeAcidentes(nome));
@@ -116,9 +173,10 @@ public class Main {
                     System.out.println("-----------------------------------");
                     System.out.println();
 
-                // [6] Inserir novo acidente
+
+                // [8] Inserir novo acidente
                 // Insere um novo acidente à rua escolhida.
-                } else if (entrada == 6){
+                } else if (entrada == 8){
                     System.out.print("Nome da rua: ");
                     String nome = in.nextLine().toUpperCase();
                     if (dataset.listaDeRuas().contains(nome)) {
@@ -181,6 +239,7 @@ public class Main {
                     } else {
                         System.out.println("\nRua inválida.\n");
                     }
+
 
                 // [0] Sair
                 // Finaliza a execução do programa.
