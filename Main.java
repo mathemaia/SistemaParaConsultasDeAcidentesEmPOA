@@ -1,57 +1,201 @@
 import Dados.BancoDeDados;
 
-import Listas.ListaDeAcidentes;
 import java.io.FileNotFoundException;
+import java.util.Scanner;
+import Listas.ListaDeRuas;
+import Listas.ListaDeAcidentes;
 
 public class Main {
     public static void main(String[] args) throws FileNotFoundException {
+        boolean sair = false;
+
         // Cria uma lista com todas as ruas e todos os seus respectivos acidentes.
-        BancoDeDados dataset = new BancoDeDados("src/Dados/vitimas.csv");
+        BancoDeDados dataset = new BancoDeDados("src/Dados/cat_vitimas.csv");
 
-        // Mostra (neste caso) as 3 ruas com mais acidentes.
-        System.out.println("***********************************");
-        System.out.println("----- Ruas com mais acidentes -----");
-        dataset.ruasComMaisAcidentes(3);
-        System.out.println("-----------------------------------");
-        System.out.println();
+        do {
+            // Menu com as opções de interação com o programa.
+            Scanner in = new Scanner(System.in);
+            System.out.println("[1] Ruas com mais acidentes\n" +
+                    "[2] Qtd. ruas\n" +
+                    "[3] Consultar rua\n" +
+                    "[4] Consultar acidentes\n" +
+                    "[5] Inserir nova rua\n" +
+                    "[6] Inserir novo acidente\n" +
+                    "[0] Sair");
+            System.out.print("Digite uma OPÇÃO: ");
 
-        // Mostra os 3 primeiros acidentes da rua de indice 0.
-        System.out.println("***********************************");
-        System.out.println("------- Exemplo de consulta -------");
-        System.out.println("Rua: " + dataset.listaDeRuas().getRua(0));
-        for (int i = 0; i < 2; i++) {
-            System.out.println(dataset.listaDeRuas().listaDeAcidentes(0).getAcidente(i));
-        }
-        System.out.println("-----------------------------------");
-        System.out.println();
+            // Testa se a opção inserida é inteiro.
+            try {
+                int entrada = Integer.parseInt(in.nextLine());
 
-        // Mostra o tamanho total da lista de ruas.
-        System.out.println("***********************************");
-        System.out.println("---- Qtd. de ruas registradas -----");
-        System.out.println(dataset.listaDeRuas().size());
-        System.out.println("-----------------------------------");
-        System.out.println();
+                // [1] Ruas com mais acidentes.
+                // Mostra a quantidade definida de ruas com mais acidentes.
+                if (entrada == 1) {
+                    System.out.print("Qtd. a ser mostrada: ");
+                    int qtd = in.nextInt();
+                    System.out.println("\n----- Ruas com mais acidentes -----");
+                    dataset.ruasComMaisAcidentes(qtd);
+                    System.out.println("-----------------------------------\n");
 
-        // Exemplo de inserção de uma nova rua.
-        System.out.println("***********************************");
-        System.out.println("------ Ex. de adicao de Rua -------");
-        String nome = "RUA DE EXEMPLO";
-        dataset.listaDeRuas().addRua(nome, new ListaDeAcidentes(nome));
-        int idx = dataset.listaDeRuas().indexOf(nome);
-        System.out.println("Rua " + nome + " adicionada.");
-        System.out.println("Qtd. acidentes nesta rua: " + dataset.listaDeRuas().listaDeAcidentes(idx).size());
-        System.out.println("Qtd de ruas registradas: " + dataset.listaDeRuas().size());
-        System.out.println("-----------------------------------");
-        System.out.println();
+                // [2] Qtd. ruas
+                // Mostra a quantidade total de ruas na lista.
+                } else if (entrada == 2) {
+                    System.out.println("\n---------- Qtd. de ruas -----------");
+                    System.out.println(dataset.listaDeRuas().size());
+                    System.out.println("-----------------------------------\n");
+
+                // [3] Consultar.
+                // Pede o nome de uma rua e mostra
+                } else if (entrada == 3) {
+                    System.out.print("Digite o nome da RUA: ");
+                    String nome = in.nextLine().toUpperCase();
+                    System.out.println("contém " + nome + ": " + dataset.listaDeRuas().contains(nome));
+                    if (dataset.listaDeRuas().contains(nome)) {
+                        int idx = dataset.listaDeRuas().indexOf(nome);
+                        System.out.println("\n-----------------------------------");
+                        System.out.println(nome);
+                        System.out.print("-----------------------------------\n");
+                        System.out.println("Total de acidentes: " + dataset.listaDeRuas().listaDeAcidentes(idx).size());
+                        // Imprime as informações dos dois primeiros acidentes da rua inserida (se existirem).
+                        if (dataset.listaDeRuas().listaDeAcidentes(idx).size() > 1) {
+                            System.out.println(dataset.listaDeRuas().listaDeAcidentes(idx).getAcidente(0));
+                            System.out.println(dataset.listaDeRuas().listaDeAcidentes(idx).getAcidente(1));
+                            System.out.println("        *\n        *\n        *\n-----------------------------------");
+                        } else if (dataset.listaDeRuas().listaDeAcidentes(idx).size() == 1){
+                            System.out.println(dataset.listaDeRuas().listaDeAcidentes(idx).getAcidente(0));
+                            System.out.println("        *\n        *\n        *\n-----------------------------------");
+                        }
+                        System.out.println();
+                    } else {
+                        System.out.println("\nEntrada inválida...\n");
+                    }
+
+                // [4] Consultar acidentes
+                // Consulta acidentes pela data ocorrida.
+                } else if (entrada == 4) {
+                    System.out.print("Digite o nome da RUA: ");
+                    String nome = in.nextLine().toUpperCase();
+                    System.out.print("Digite uma data: ");
+                    String data = in.next();
+                    if (dataset.listaDeRuas().contains(nome) && !nome.equals("")) {
+                        int idx = dataset.listaDeRuas().indexOf(nome);
+                        int count = 0;
+                        // Procura acidentes na data inserida.
+                        for (int i = 0; i < dataset.listaDeRuas().listaDeAcidentes(idx).size(); i++) {
+                            if (dataset.listaDeRuas().listaDeAcidentes(idx).getInfo(i, "data").split(" ")[0].equals(data)) {
+                                count++;
+                            }
+                        }
+                        if (count == 0) {
+                            System.out.println("\nNão existem acidentes registrados nesta data.\n");
+                        } else {
+                            System.out.println("\n-----------------------------------");
+                            System.out.println(data);
+                            System.out.print("-----------------------------------");
+                            for (int i = 0; i < dataset.listaDeRuas().listaDeAcidentes(idx).size(); i++) {
+                                if (dataset.listaDeRuas().listaDeAcidentes(idx).getInfo(i, "data").split(" ")[0].equals(data)) {
+                                    System.out.println(dataset.listaDeRuas().listaDeAcidentes(idx).getAcidente(i));
+                                }
+                            }
+                            System.out.print("-----------------------------------\n\n");
+                        }
+                    } else {
+                        System.out.println("\nNome da rua inválido.\n");
+                    }
+
+                // [5] Inserir nova rua
+                // Insere uma nova rua na lista de ruas.
+                } else if (entrada == 5) {
+                    System.out.print("Nome da RUA: ");
+                    String nome = in.nextLine().toUpperCase();
+                    dataset.listaDeRuas().addRua(nome, new ListaDeAcidentes(nome));
+                    int idx = dataset.listaDeRuas().indexOf(nome);
+                    System.out.println("\n-----------------------------------");
+                    System.out.println(nome + " adicionada.");
+                    System.out.println("Qtd. acidentes: " + dataset.listaDeRuas().listaDeAcidentes(idx).size());
+                    System.out.println("Nova qtd. total de ruas: " + dataset.listaDeRuas().size());
+                    System.out.println("-----------------------------------");
+                    System.out.println();
+
+                // [6] Inserir novo acidente
+                // Insere um novo acidente à rua escolhida.
+                } else if (entrada == 6){
+                    System.out.print("Nome da rua: ");
+                    String nome = in.nextLine().toUpperCase();
+                    if (dataset.listaDeRuas().contains(nome)) {
+                        int idx = dataset.listaDeRuas().indexOf(nome);
+                        System.out.println("\n-----------------------------------");
+                        System.out.println("Insira os dados do acidente");
+                        System.out.println("-----------------------------------");
+                        // Dados que serão inseridos.
+                        String data = in.next();
+                        String hora = in.next();
+                        int idade = in.nextInt();
+                        String sexo = in.next();
+                        String sitVitima = in.next();
+                        String tipoAcid = in.next();
+                        int auto = in.nextInt();
+                        int taxi = in.nextInt();
+                        int onibusUrb = in.nextInt();
+                        int onibusMet = in.nextInt();
+                        int onibusInt = in.nextInt();
+                        int caminhao = in.nextInt();
+                        int moto = in.nextInt();
+                        int carroca = in.nextInt();
+                        int bicicleta = in.nextInt();
+                        int outro = in.nextInt();
+                        int lotacao = in.nextInt();
+                        String diaSem = in.next();
+                        String periodoDia = in.next();
+                        String fxEt = in.next();
+                        String tipoVeic = in.next();
+                        System.out.println("-----------------------------------\n");
+                        // Adiciona o acidente com os dados inseridos acima.
+                        System.out.println("------- Acidente adicionado -------");
+                        dataset.listaDeRuas().listaDeAcidentes(idx).addAcidente(data, hora, idade, sexo, sitVitima, nome,
+                                tipoAcid, auto, taxi, onibusUrb, onibusMet, onibusInt, caminhao, moto, carroca, bicicleta,
+                                outro, lotacao, diaSem, periodoDia, fxEt, tipoVeic);
+                        System.out.println("Rua: " + nome);
+                        System.out.println("Qtd. acidentes nesta rua: " + dataset.listaDeRuas().listaDeAcidentes(idx).size());
+                        System.out.println("-----------------------------------\n");
+                    } else {
+                        System.out.println("\nRua inválida.\n");
+                    }
+
+                // [0] Sair
+                // Finaliza a execução do programa.
+                } else if (entrada == 0) {
+                    sair = true;
+                } else {
+                    System.out.println("\nOpção inválida.\n");
+                }
+            } catch (Exception e) {
+                System.out.println("\nEntrada inválida.\n");
+            }
+
+            } while (!sair);
+
+
+
+
+
+
+        /*
+
+
+
+
+
+
 
         // Exemplo de inserção de um novo acidente na rua adicionada.
-        System.out.println("***********************************");
-        System.out.println("---- Ex. de adicao de Acidente ----");
-        dataset.listaDeRuas().listaDeAcidentes(idx).addAcidente("00/00/00", "00:00", 0, "sexo",
-                "situacao", nome, "tipo", 0, 0, 0, 0, 0, 0,
-                0, 0, 0, 0, 0, "dia", "periodo", "faixaEt", "veiculo");
-        System.out.println("Rua: " + nome);
-        System.out.println("Qtd. acidentes nesta rua: " + dataset.listaDeRuas().listaDeAcidentes(idx).size());
-        System.out.println("---- Ex. de adicao de Acidente ----");
+
+
+         */
+
+
+
+
+
     }
 }

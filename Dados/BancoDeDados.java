@@ -2,6 +2,8 @@ package Dados;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.Arrays;
+import java.util.Objects;
 import java.util.Scanner;
 import Listas.ListaDeRuas;
 import Listas.ListaDeAcidentes;
@@ -40,13 +42,14 @@ public class BancoDeDados {
 
         // Cria a lista com todas as ruas.
         while (in.hasNextLine()) {
-            String[] linha = in.nextLine().split(";");
-            if (!this.listaDeRuas.contains(linha[idx])) {
-                this.listaDeRuas.addRua(linha[idx], new ListaDeAcidentes(linha[idx]));
+            if (Objects.equals(in.nextLine(), "")) {
+
+                String[] linha = in.nextLine().split(";");
+                if (!this.listaDeRuas.contains(linha[idx])) {
+                    this.listaDeRuas.addRua(linha[idx], new ListaDeAcidentes(linha[idx]));
+                }
             }
         }
-
-
     }
 
     /**
@@ -59,14 +62,16 @@ public class BancoDeDados {
         Scanner in = new Scanner(new File(endereco));
 
         for (int i = 0; in.hasNextLine(); i++) {
-            String[] linha = in.nextLine().split(";");
-            if (ruas.indexOf(linha[5]) != -1) {
-                int idxRua = ruas.indexOf(linha[5]);
-                this.listaDeRuas.listaDeAcidentes(idxRua).addAcidente(linha[0], linha[1], Integer.parseInt(linha[2]), linha[3], linha[4],
-                        linha[5], linha[6], Integer.parseInt(linha[7]), Integer.parseInt(linha[8]), Integer.parseInt(linha[9]),
-                        Integer.parseInt(linha[10]), Integer.parseInt(linha[11]), Integer.parseInt(linha[12]), Integer.parseInt(linha[13]),
-                        Integer.parseInt(linha[14]), Integer.parseInt(linha[15]), Integer.parseInt(linha[16]), Integer.parseInt(linha[17]),
-                        linha[18], linha[19], linha[20], linha[21]);
+            if (Objects.equals(in.nextLine(), "")) {
+                String[] linha = in.nextLine().split(";");
+                if (ruas.indexOf(linha[5]) != -1) {
+                    int idxRua = ruas.indexOf(linha[5]);
+                    this.listaDeRuas.listaDeAcidentes(idxRua).addAcidente(linha[0], linha[1], Integer.parseInt(linha[2]), linha[3], linha[4],
+                            linha[5], linha[6], Integer.parseInt(linha[7]), Integer.parseInt(linha[8]), Integer.parseInt(linha[9]),
+                            Integer.parseInt(linha[10]), Integer.parseInt(linha[11]), Integer.parseInt(linha[12]), Integer.parseInt(linha[13]),
+                            Integer.parseInt(linha[14]), Integer.parseInt(linha[15]), Integer.parseInt(linha[16]), Integer.parseInt(linha[17]),
+                            linha[18], linha[19], linha[20], linha[21]);
+                }
             }
         }
     }
