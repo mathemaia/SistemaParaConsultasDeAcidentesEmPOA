@@ -10,7 +10,7 @@ public class Main {
         boolean sair = false;
 
         // Cria uma lista com todas as ruas e todos os seus respectivos acidentes.
-        BancoDeDados dataset = new BancoDeDados("src/Dados/cat_vitimas.csv");
+        BancoDeDados dataset = new BancoDeDados("Dados/cat_vitimas.csv");
 
         do {
             // Menu com as opções de interação com o programa.
@@ -49,7 +49,6 @@ public class Main {
                 } else if (entrada == 3) {
                     System.out.print("Digite o nome da RUA: ");
                     String nome = in.nextLine().toUpperCase();
-                    System.out.println("contém " + nome + ": " + dataset.listaDeRuas().contains(nome));
                     if (dataset.listaDeRuas().contains(nome)) {
                         int idx = dataset.listaDeRuas().indexOf(nome);
                         System.out.println("\n-----------------------------------");
