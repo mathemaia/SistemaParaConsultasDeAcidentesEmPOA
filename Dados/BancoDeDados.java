@@ -80,7 +80,7 @@ public class BancoDeDados {
      * Ex:  maisAcidentes(3) -> retorna as 3 ruas com mais acidentes.
      * @param qtdRuas quantidade de ruas a serem exibidas.
      */
-    public void ruasComMaisAcidentes(int qtdRuas) {
+    public ListaEncadeada ruasComMaisAcidentes(int qtdRuas) {
         // Cria uma lista encadeada contendo o total de todos os acidentes por rua.
         ListaEncadeada qtds = new ListaEncadeada();
         for (int i = 0; i < this.listaDeRuas.size(); i++) {
@@ -90,14 +90,15 @@ public class BancoDeDados {
             //System.out.println(this.listaDeRuas.listaDeAcidentes(i).size());
         }
 
+        // Testa se a quantidade inserida é valida.
+        if (qtdRuas > qtds.size() || qtdRuas <= 0) {
+            return null;
+        }
+
         // Organiza as quantidades de acidente de cada rua em uma lista.
         qtds.organize();
 
-        // Saídas.
-        for (int i = 0; i < qtdRuas; i++) {
-            System.out.println(qtds.nome(i));
-            System.out.println(qtds.element(i));
-        }
+        return qtds;
     }
 
     /**

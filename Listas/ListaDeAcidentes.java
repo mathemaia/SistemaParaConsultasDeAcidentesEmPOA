@@ -1,7 +1,5 @@
 package Listas;
 
-import java.util.Objects;
-
 public class ListaDeAcidentes {
     /**
      * Classe interna Nodo. Contém um elemento e uma referência para o próximo.
@@ -621,6 +619,30 @@ public class ListaDeAcidentes {
 
         return acidente.auto + acidente.taxi + acidente.onibusUrb + acidente.onibusMet + acidente.onibusInt +
                 acidente.caminhao + acidente.moto + acidente.carroca + acidente.bicicleta + acidente.outro + acidente.lotacao;
+    }
+
+    /**
+     * Calcula a quantidade total de acidentes envolvendo motos.
+     * @return quantidade total.
+     */
+    public int qtdTotalDeMotos() {
+        Acidente aux = this.head;
+        int count = 0;
+
+        // Contabiliza o head.
+        if (aux.moto != 0) {
+            count++;
+        }
+
+        // Percorre a lista de acidentes fazendo o somatório da quantidade de motos envolvidas.
+        while (aux != this.tail) {
+            if (aux.moto != 0) {
+                count++;
+            }
+            aux = aux.next;
+        }
+
+        return count;
     }
 
     @Override
