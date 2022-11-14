@@ -87,6 +87,7 @@ public class Main {
                             System.out.println("\nQuantide inválida...\n");
                         } else {
                             System.out.println("\n--- Acidentes com mais veiculos ---");
+                            System.out.println("Rua: " + nome);
                             for (int i = 0; i < lista.size(); i++) {
                                 System.out.println(lista.nome(i) + ": " + lista.element(i) + " veiculos registrados.");
                             }
