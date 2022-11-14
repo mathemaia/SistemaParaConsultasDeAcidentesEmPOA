@@ -10,7 +10,7 @@ public class Main {
         boolean sair = false;
 
         // Cria uma lista com todas as ruas e todos os seus respectivos acidentes.
-        BancoDeDados dataset = new BancoDeDados("src/Dados/cat_vitimas.csv");
+        BancoDeDados dataset = new BancoDeDados("Dados/cat_vitimas.csv");
 
         do {
             // Menu com as opções de interação com o programa.
