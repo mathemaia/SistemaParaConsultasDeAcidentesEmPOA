@@ -112,10 +112,9 @@ public class BancoDeDados {
         int tam = this.listaDeRuas.listaDeAcidentes(idx).size();
         // Cria uma lista com elementos únicos (dia) - cada nodo é um dia.
         for (int i = 0; i < tam; i++) {
-            String[] info = this.listaDeRuas.listaDeAcidentes(idx).getInfo(i, "data").split(" ");
-            String data = info[0];
-            if (!listaInicial.contains(data)) {
-                listaInicial.add(data, null);
+            String dia = this.listaDeRuas.listaDeAcidentes(idx).getInfo(i, "diaSem");
+            if (!listaInicial.contains(dia)) {
+                listaInicial.add(dia, null);
             }
         }
         // Adiciona a quantidade de acidentes em cada rua.

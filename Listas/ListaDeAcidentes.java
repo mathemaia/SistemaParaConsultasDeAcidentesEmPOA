@@ -260,9 +260,7 @@ public class ListaDeAcidentes {
 
         // Identifica a coluna (tipo de dado).
         String saida;
-
         if (coluna.equals("data")) {
-
             if (indice == this.count - 1) {
                 return this.tail.data;
             } else {
@@ -602,7 +600,7 @@ public class ListaDeAcidentes {
         int count = 0;
 
         for (int i = 0; i < this.count; i++) {
-            if (aux.data.split(" ")[0].equals(dia)) count++;
+            if (aux.diaSem.equals(dia)) count++;
             aux = aux.next;
         }
 
